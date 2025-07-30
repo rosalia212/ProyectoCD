@@ -1,0 +1,607 @@
+---
+title: "Código Depuración"
+author: "Rosalia"
+date: "2025-07-30"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+    toc_foat: true
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE, fig.width=8,
+                      fig.height = 8)
+```
+
+
+# Paquetes
+```{r}
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(countrycode)
+library(scales)
+```
+
+# Carga de datos
+```{r}
+
+esperanzadevida <- read_excel("esperanza_de_vida_mujer.xlsx")
+ProductoGDP <- read_excel("gdp_pcap.xlsx")
+nacimientos <- read_excel("nacimientos_por_mujer.xlsx")
+
+
+```
+
+# Combinación de variables
+```{r}
+vida_long <- pivot_longer(esperanzadevida, cols= -country, names_to = "year", values_to = "esperanza_de_vida")
+producto_long <- pivot_longer(ProductoGDP, cols= -country, names_to = "year", values_to = "producto_por_capita")
+nacimientos_long <- pivot_longer(nacimientos, cols= -country, names_to = "year", values_to = "nacimientos_por_mujer")
+
+producto_long %>%
+  count(country, year) %>%
+  filter(n > 1)
+
+
+
+n_distinct(vida_long$year)
+n_distinct(producto_long$year)
+n_distinct(nacimientos_long$year)
+
+setdiff(producto_long$country, vida_long$country)
+
+```
+# Modificando errores en los países
+```{r}
+producto_long <- producto_long %>%
+  mutate(country = recode(country,
+    "Uk" = "United Kingdom",
+    "South korea" = "Korea, Rep.",
+    "North korea" = "Korea, Dem. Rep.",
+    "kazakhstan" = "Kazakhstan",
+    "kenya" = "Kenya",
+    "kuwait" = "Kuwait",
+    "kiribati" = "Kiribati",
+    "St. Lucia" = "Saint Lucia",
+    "St. kitts and Nevis" = "Saint Kitts and Nevis",
+    "St. Vincent and the Grenadines" = "Saint Vincent and the Grenadines",
+    "Hong kong, China" = "Hong Kong SAR, China",
+    "SlovakRepublic" = "Slovak Republic",
+    "kyrgyz Republic" = "Kyrgyz Republic",
+    "Micronesia, Fed. Sts." = "Federated States of Micronesia",
+    "Micronesia" = "Federated States of Micronesia",
+    "Congo, Rep." = "Congo, Rep.",
+    "Congo, Dem. Rep." = "Congo, Dem. Rep.",
+    "Virgin Islands (U,S,)" = "Virgin Islands (U.S.)"
+  ))
+
+```
+
+
+```{r}
+nacimientos_long <- nacimientos_long %>%
+  mutate(country = recode(country,
+    "Uk" = "United Kingdom",
+    "South korea" = "Korea, Rep.",
+    "North korea" = "Korea, Dem. Rep.",
+    "kazakhstan" = "Kazakhstan",
+    "kenya" = "Kenya",
+    "kuwait" = "Kuwait",
+    "kiribati" = "Kiribati",
+    "St. Lucia" = "Saint Lucia",
+    "St. kitts and Nevis" = "Saint Kitts and Nevis",
+    "St. Vincent and the Grenadines" = "Saint Vincent and the Grenadines",
+    "Hong kong, China" = "Hong Kong SAR, China",
+    "SlovakRepublic" = "Slovak Republic",
+    "kyrgyz Republic" = "Kyrgyz Republic",
+    "Micronesia, Fed. Sts." = "Federated States of Micronesia",
+    "Micronesia" = "Federated States of Micronesia",
+    "Congo, Rep." = "Congo, Rep.",
+    "Congo, Dem. Rep." = "Congo, Dem. Rep.",
+    "Virgin Islands (U,S,)" = "Virgin Islands (U.S.)"
+  ))
+```
+
+
+```{r}
+vida_long <- vida_long %>%
+  mutate(country = recode(country,
+    "Uk" = "United Kingdom",
+    "South korea" = "Korea, Rep.",
+    "North korea" = "Korea, Dem. Rep.",
+    "kazakhstan" = "Kazakhstan",
+    "kenya" = "Kenya",
+    "kuwait" = "Kuwait",
+    "kiribati" = "Kiribati",
+    "St. Lucia" = "Saint Lucia",
+    "St. kitts and Nevis" = "Saint Kitts and Nevis",
+    "St. Vincent and the Grenadines" = "Saint Vincent and the Grenadines",
+    "Hong kong, China" = "Hong Kong SAR, China",
+    "SlovakRepublic" = "Slovak Republic",
+    "kyrgyz Republic" = "Kyrgyz Republic",
+    "Micronesia, Fed. Sts." = "Federated States of Micronesia",
+    "Micronesia" = "Federated States of Micronesia",
+    "Congo, Rep." = "Congo, Rep.",
+    "Congo, Dem. Rep." = "Congo, Dem. Rep.",
+    "Virgin Islands (U,S,)" = "Virgin Islands (U.S.)"
+
+
+
+  ))
+```
+
+
+
+
+# Seleccionando los países y creando la base de datos completa
+```{r}
+setdiff(nacimientos_long$country, vida_long$country)
+```
+```{r}
+paises_elegidos <- unique(vida_long$country)
+
+producto_long <- producto_long %>% 
+  filter(country %in% paises_elegidos) %>%
+  distinct(country, year, .keep_all = TRUE)
+
+nacimientos_long <- nacimientos_long %>% 
+  filter(country %in% paises_elegidos) %>%
+  distinct(country, year, .keep_all = TRUE)
+
+base_completa <- vida_long %>%
+  left_join(producto_long, by = c("country", "year")) %>%
+  left_join(nacimientos_long, by = c("country", "year"))
+
+```
+
+# Inicio del Análisis para el reto 1
+```{r}
+#Resumen estadístico general de cada variable
+summary(base_completa$esperanza_de_vida)
+summary(base_completa$producto_por_capita)
+summary(base_completa$nacimientos_por_mujer)
+```
+# Confirmando los campos y planteando preguntas.
+```{r}
+# Asegurar que el campo "year" sea numérico
+base_completa$year <- as.numeric(base_completa$year)
+
+# 1. País que más veces ha tenido la mayor esperanza de vida
+lideres_por_ano <- base_completa %>%
+  group_by(year) %>%
+  filter(!is.na(esperanza_de_vida)) %>%
+  slice_max(order_by = esperanza_de_vida, n = 1) %>%
+  ungroup()
+
+pais_mas_lider <- lideres_por_ano %>%
+  count(country, sort = TRUE)
+
+# Mostrar el país con más "primeros lugares" en esperanza de vida
+head(pais_mas_lider, 1)
+
+# Ver los principales 5 líderes históricos
+head(pais_mas_lider, 5)
+```
+
+```{r}
+#Tabla resumen por año
+resumen_por_ano <- base_completa %>%
+  group_by(year) %>%
+  summarise(
+    promedio = mean(esperanza_de_vida, na.rm = TRUE),
+    maximo = max(esperanza_de_vida, na.rm = TRUE),
+    minimo = min(esperanza_de_vida, na.rm = TRUE),
+    pais_max = country[which.max(esperanza_de_vida)],
+    pais_min = country[which.min(esperanza_de_vida)]
+  )
+
+# Ver las primeras 10 filas
+head(resumen_por_ano, 10)
+```
+
+# Realizando gráficos generales
+```{r}
+ggplot(resumen_por_ano, aes(x = year, y = promedio)) +
+  geom_line(color = "steelblue", size = 1) +
+  labs(title = "Promedio mundial de esperanza de vida femenina por año",
+       x = "Año",
+       y = "Esperanza de vida (años)") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(base_completa, aes(x = nacimientos_por_mujer)) +
+  geom_histogram(bins = 30, fill = "lightcoral") +
+  labs(title = "Distribución de nacimientos por mujer", x = "Hijos por mujer", y = "Frecuencia") +
+  theme_minimal()
+#Esto me dice que la mayoría de las mujeres durante los años tienen aproximadamente 1
+```
+```{r}
+names(base_completa)
+
+# Histograma esperanza de vida
+ggplot(base_completa, aes(x = esperanza_de_vida)) +
+  geom_histogram(bins = 30, fill = "blue") +
+  labs(title = "Distribución de la esperanza de vida femenina",
+       x= "Esperanza de vida (años)",
+       y="Frecuencia") +
+  theme_minimal()
+```
+#Reto 1 solicitaba Saber si tenía Outliers
+
+```{r}
+# Función para detectar outliers
+detect_outliers <- function(x) {
+  stats <- boxplot.stats(x)$out
+  return(stats)
+}
+
+# Aplicar
+out_vida <- detect_outliers(base_completa$esperanza_de_vida)
+out_nacimientos <- detect_outliers(base_completa$nacimientos_por_mujer)
+
+length(out_vida)       # Cantidad de outliers en esperanza de vida
+length(out_nacimientos) # Cantidad de outliers en fecundidad
+```
+#Quiero dividirlos por continente 
+#Agregué manualmente Kosovo porque no lo reconoce la libreria countrycoud
+
+```{r}
+base_completa <- base_completa %>%
+  mutate(
+    continente = countrycode(country, origin = "country.name", destination = "continent"),
+    continente = ifelse(is.na(continente) & country == "Kosovo", "Europe", continente)
+  )
+```
+
+
+```{r}
+ggplot(base_completa, aes(x = continente, y = esperanza_de_vida)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Esperanza de vida por continente", y = "Esperanza de vida", x = "Continente") +
+  theme_minimal()
+```
+
+
+```{r}
+base_completa <- base_completa %>%
+  mutate(gdp_bajo = ifelse(producto_por_capita < 5000, "Bajo GDP", "No Bajo GDP"))
+
+ggplot(base_completa, aes(x = gdp_bajo, y = esperanza_de_vida)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Esperanza de vida según nivel de GDP", y = "Esperanza de vida", x = "Grupo de GDP") +
+  theme_minimal()
+```
+
+```{r}
+base_completa <- base_completa %>%
+  mutate(gdp_grupo = ifelse(producto_por_capita > 13845, "Alto GDP", "Bajo GDP"))
+
+ggplot(base_completa, aes(x = gdp_grupo, y = esperanza_de_vida, fill = gdp_grupo)) +
+  geom_boxplot() +
+  labs(title = "Esperanza de vida según nivel de GDP",
+       x = "Grupo de GDP",
+       y = "Esperanza de vida femenina (años)") +
+  scale_fill_manual(values = c("Bajo GDP" = "red", "Alto GDP" = "steelblue")) +
+  theme_minimal()
+```
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer > 5) %>%
+  ggplot(aes(x = as.numeric(year), y = nacimientos_por_mujer)) +
+  geom_point(alpha = 0.5, color = "red") +
+  labs(title = "Países con alta fecundidad (> 5 hijos)", x = "Año", y = "Hijos por mujer") +
+  theme_minimal()
+```
+
+```{r}
+base_completa %>%
+  filter(esperanza_de_vida > 80) %>%
+  ggplot(aes(x = as.numeric(year), y = esperanza_de_vida)) +
+  geom_point(alpha = 0.5, color = "darkgreen") +
+  labs(title = "Países con alta esperanza de vida (> 80 años)", x = "Año", y = "Esperanza de vida") +
+  theme_minimal()
+
+base_completa %>%
+  filter(esperanza_de_vida > 80) %>%
+  ggplot(aes(x = as.numeric(year), y = esperanza_de_vida, color = continente)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Países con alta esperanza de vida(>80) por continente",
+       x = "Año",
+       y = "Esperanza de vida",
+       color = "Continente") +
+  theme_minimal()
+```
+
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer > 2, esperanza_de_vida < 100) %>%
+  ggplot(aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(color = "purple") +
+  labs(title = "Alta Fecundidad y  baja esperanza de vida", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer <3, esperanza_de_vida > 90) %>%
+  ggplot(aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(color = "steelblue") +
+  labs(title = "Baja fecundidad y alta esperanza de vida", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(base_completa, aes(x = producto_por_capita, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.3, color = "darkblue") +
+  scale_x_log10() +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Relación entre GDP per cápita y esperanza de vida", x = "GDP per cápita (log)", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+
+```{r}
+ggplot(base_completa, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.4, color = "darkred") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(title = "Relación entre hijos por mujer y esperanza de vida", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(base_completa, aes(x = producto_por_capita, y = nacimientos_por_mujer)) +
+  geom_point(alpha = 0.4, color = "darkgreen") +
+  scale_x_log10() +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Relación entre GDP y fecundidad", x = "GDP per cápita (log)", y = "Hijos por mujer") +
+  theme_minimal()
+```
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer > 5) %>%
+  distinct(country)  # te da solo los países únicos
+
+
+base_completa %>%
+  filter(nacimientos_por_mujer > 5) %>%
+  select(country, year, nacimientos_por_mujer) %>%
+  arrange(desc(nacimientos_por_mujer))  # ordenado de mayor a menor
+```
+
+
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer > 5) %>%
+  ggplot(aes(x = as.numeric(year), y = nacimientos_por_mujer, label = country)) +
+  geom_point(alpha = 0.3, color = "red") +
+  geom_text_repel(size = 3, max.overlaps = 10) +
+  labs(title = "Países con alta fecundidad (> 5 hijos)", x = "Año", y = "Hijos por mujer") +
+  theme_minimal()
+```
+
+```{r}
+base_completa %>%
+  filter(nacimientos_por_mujer > 5) %>%
+  ggplot(aes(x = as.numeric(year), y = nacimientos_por_mujer, color = continente)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Países con alta fecundidad (>5 hijos por mujer) por continente",
+       x = "Año",
+       y = "Hijos por mujer",
+       color = "Continente") +
+  theme_minimal()
+```
+```{r}
+
+# Filtrar para un año específico (por ejemplo 2021)
+datos_filtrados <- base_completa %>%
+  filter(year == 2021, 
+         !is.na(producto_por_capita), 
+         !is.na(nacimientos_por_mujer), 
+         !is.na(esperanza_de_vida))
+
+# Gráfico
+ggplot(datos_filtrados, aes(x = producto_por_capita, 
+                            y = nacimientos_por_mujer, 
+                            size = esperanza_de_vida, 
+                            color = esperanza_de_vida)) +
+  geom_point(alpha = 0.8) +
+  scale_x_log10(labels = dollar_format(prefix = "$")) +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida (2021)",
+       x = "Producto Interno Bruto per cápita (log)",
+       y = "Hijos por mujer",
+       color = "Esperanza de vida (años)",
+       size = "Esperanza de vida") +
+  theme_minimal()
+```
+#Probando para visualización
+
+```{r}
+brasil_data <- base_completa %>%
+  filter(country == "Brazil") %>%
+  mutate(gdp_grupo = ifelse(producto_por_capita > 13845, "Alto GDP", "Bajo GDP"))
+
+# Crear el boxplot solo para Brasil
+ggplot(brasil_data, aes(x = gdp_grupo, y = esperanza_de_vida, fill = gdp_grupo)) +
+  geom_boxplot() +
+  labs(title = "Esperanza de vida en Brasil según nivel de GDP",
+       x = "Grupo de GDP",
+       y = "Esperanza de vida femenina (años)") +
+  scale_fill_manual(values = c("Bajo GDP" = "red", "Alto GDP" = "steelblue")) +
+  theme_minimal()
+```
+
+```{r}
+# Filtrar datos solo del año 2021
+datos_2021 <- base_completa %>%
+  filter(year == 2021) %>%
+  mutate(gdp_grupo = ifelse(producto_por_capita > 13845, "Alto GDP", "Bajo GDP"))
+
+# Crear el boxplot solo para 2021
+ggplot(datos_2021, aes(x = gdp_grupo, y = esperanza_de_vida, fill = gdp_grupo)) +
+  geom_boxplot() +
+  labs(title = "Esperanza de vida femenina en 2021 según nivel de GDP",
+       x = "Grupo de GDP",
+       y = "Esperanza de vida femenina (años)") +
+  scale_fill_manual(values = c("Bajo GDP" = "red", "Alto GDP" = "steelblue")) +
+  theme_minimal()
+```
+
+```{r}
+# Filtrar solo datos de Brasil en el año 2021
+brasil_2021 <- base_completa %>%
+  filter(year == 2021, country == "Brazil") %>%
+  mutate(gdp_grupo = ifelse(producto_por_capita > 13845, "Alto GDP", "Bajo GDP"))
+
+# Ver tabla si solo quieres ver el dato
+print(brasil_2021)
+
+# O crear un gráfico de punto único
+ggplot(brasil_2021, aes(x = gdp_grupo, y = esperanza_de_vida, fill = gdp_grupo)) +
+  geom_col(width = 0.5) +
+  labs(title = "Esperanza de vida femenina en Brasil (2021)",
+       x = "Grupo de GDP",
+       y = "Esperanza de vida (años)") +
+  scale_fill_manual(values = c("Bajo GDP" = "red", "Alto GDP" = "steelblue")) +
+  theme_minimal()
+```
+```{r}
+continentes_2021 <- base_completa %>%
+  filter(year == 2021, !is.na(esperanza_de_vida), !is.na(continente)) %>%
+  group_by(continente) %>%
+  summarise(esperanza_media = mean(esperanza_de_vida, na.rm = TRUE)) %>%
+  arrange(desc(esperanza_media))
+
+# Gráfico
+ggplot(continentes_2021, aes(x = reorder(continente, -esperanza_media), y = esperanza_media, fill = continente)) +
+  geom_col() +
+  labs(title = "Esperanza de vida femenina promedio por continente (2021)",
+       x = "Continente",
+       y = "Esperanza de vida (años)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+```{r}
+# Filtrar solo datos del año 2021 y no NA
+base_2021 <- base_completa %>%
+  filter(year == 2021, !is.na(esperanza_de_vida), !is.na(continente))
+
+# Crear boxplot
+ggplot(base_2021, aes(x = continente, y = esperanza_de_vida, fill = continente)) +
+  geom_boxplot() +
+  labs(title = "Distribución de la esperanza de vida femenina por continente (2021)",
+       x = "Continente",
+       y = "Esperanza de vida femenina (años)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+```{r}
+# Filtrar solo datos del año 2021
+base_2021 <- base_completa %>%
+  filter(year == 2021) %>%
+  drop_na(esperanza_de_vida, producto_por_capita, continente)
+
+# Crear variable de grupo de GDP
+base_2021 <- base_2021 %>%
+  mutate(gdp_grupo = ifelse(producto_por_capita > 13845, "Alto GDP", "Bajo GDP"))
+
+# Boxplot
+ggplot(base_2021, aes(x = continente, y = esperanza_de_vida, fill = gdp_grupo)) +
+  geom_boxplot(position = position_dodge(0.8)) +
+  labs(
+    title = "Esperanza de vida femenina por continente y nivel de GDP (2021)",
+    x = "Continente",
+    y = "Esperanza de vida (años)",
+    fill = "Grupo de GDP"
+  ) +
+  scale_fill_manual(values = c("Bajo GDP" = "red", "Alto GDP" = "steelblue")) +
+  theme_minimal()
+```
+
+```{r}
+# Filtrar datos del año 2021 y eliminar valores faltantes
+base_2021 <- base_completa %>%
+  filter(year == 2021) %>%
+  drop_na(esperanza_de_vida, nacimientos_por_mujer)
+
+# Escalar ambas variables (para compararlas en el mismo gráfico)
+base_barras <- base_2021 %>%
+  select(country, esperanza_de_vida, nacimientos_por_mujer) %>%
+  mutate(
+    esperanza_escalada = scale(esperanza_de_vida)[,1],
+    fecundidad_escalada = scale(nacimientos_por_mujer)[,1]
+  ) %>%
+  pivot_longer(cols = c(esperanza_escalada, fecundidad_escalada),
+               names_to = "variable", values_to = "valor")
+
+# Seleccionar los países con esperanza de vida más alta (o puedes cambiar a los más bajos)
+top_paises <- base_2021 %>%
+  arrange(desc(esperanza_de_vida)) %>%
+  slice(1:10) %>% pull(country)
+
+# Filtrar solo los países seleccionados
+base_barras <- base_barras %>%
+  filter(country %in% top_paises)
+
+# Gráfico de barras
+ggplot(base_barras, aes(x = reorder(country, -valor), y = valor, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Comparación estandarizada entre esperanza de vida y fecundidad (Top 10 países)",
+    x = "País",
+    y = "Valor estandarizado",
+    fill = "Variable"
+  ) +
+  scale_fill_manual(
+    values = c("esperanza_escalada" = "steelblue", "fecundidad_escalada" = "orange"),
+    labels = c("Esperanza de vida", "Fecundidad")
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Filtrar y limpiar datos del año 2021
+base_2021 <- base_completa %>%
+  filter(year == 2021) %>%
+  drop_na(esperanza_de_vida, nacimientos_por_mujer, continente)
+
+# Agrupar por continente y calcular promedio
+base_continente <- base_2021 %>%
+  group_by(continente) %>%
+  summarise(
+    esperanza_media = mean(esperanza_de_vida),
+    fecundidad_media = mean(nacimientos_por_mujer)
+  ) %>%
+  # Escalar ambas variables
+  mutate(
+    esperanza_escalada = scale(esperanza_media)[,1],
+    fecundidad_escalada = scale(fecundidad_media)[,1]
+  ) %>%
+  pivot_longer(cols = c(esperanza_escalada, fecundidad_escalada),
+               names_to = "variable", values_to = "valor")
+
+# Gráfico de barras por continente
+ggplot(base_continente, aes(x = continente, y = valor, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Comparación estandarizada de esperanza de vida y fecundidad por continente (2021)",
+    x = "Continente",
+    y = "Valor estandarizado",
+    fill = "Variable"
+  ) +
+  scale_fill_manual(
+    values = c("esperanza_escalada" = "steelblue", "fecundidad_escalada" = "orange"),
+    labels = c("Esperanza de vida", "Fecundidad")
+  ) +
+  theme_minimal()
+
+```
+
