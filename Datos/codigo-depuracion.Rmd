@@ -2,12 +2,18 @@
 title: "Código Depuración"
 author: "Rosalia"
 date: "2025-07-30"
-output: 
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+    fig_caption: true
+    latex_engine: pdflatex
   html_document:
     toc: true
     number_sections: true
-    toc_foat: true
-  
+    toc_float: true
+fontsize: 11pt
+geometry: margin=1in
 ---
 
 ```{r setup, include=FALSE}
@@ -610,5 +616,7 @@ ggplot(base_continente, aes(x = continente, y = valor, fill = variable)) +
 
 ```{r}
 write.csv(base_completa, "Datos/Base_Datos_depurada/base_completa.csv", row.names = FALSE)
+
+
 ```
 
