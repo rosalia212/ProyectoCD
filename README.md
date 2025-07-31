@@ -6,7 +6,8 @@ En lo personal, mi familia ilustra esta interrogante de forma particular. Mi mad
 En el proceso, encontré tres estudios que llamaron mi atención. Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. Por su parte, Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
 Me resulta interesante cómo estas investigaciones se reflejan, de alguna forma, en la experiencia de mi propia familia. A mis 35 años, nunca había considerado que la decisión de tener hijos pudiera estar vinculada con la longevidad. Aunque esta no ha sido una motivación personal, estos hallazgos abren la posibilidad de considerar la maternidad desde una perspectiva distinta.
 Por otro lado, Hampton (2021) analiza la relación entre desarrollo y fecundidad, señalando que, aunque existe la idea de que a mayor desarrollo económico se podría esperar un aumento de la fecundidad, en la práctica no se observa una asociación directa. Su estudio concluye que, al menos en la última década, los niveles elevados de desarrollo humano ya no están vinculados con repuntes en la tasa de natalidad.
-/
+# Objetivo
+
 Ante estas inquietudes el Objetivo General es:
 Explorar la posible relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
 En cuanto a los objetivos específicos son:
