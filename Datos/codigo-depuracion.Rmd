@@ -13,6 +13,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE, fig.width=8,
                       fig.height = 8)
+# 👉 Esta línea fija la raíz del proyecto como el directorio del .Rproj
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
 
@@ -30,9 +32,10 @@ library(scales)
 # Carga de datos
 ```{r}
 
-esperanzadevida <- read_excel("esperanza_de_vida_mujer.xlsx")
-ProductoGDP <- read_excel("gdp_pcap.xlsx")
-nacimientos <- read_excel("nacimientos_por_mujer.xlsx")
+
+esperanzadevida <- read_excel("Datos/Base_Datos_Original/esperanza_de_vida_mujer.xlsx")
+ProductoGDP <- read_excel("Datos/Base_Datos_Original/gdp_pcap.xlsx")
+nacimientos <- read_excel("Datos/Base_Datos_Original/nacimientos_por_mujer.xlsx")
 
 
 ```
@@ -421,7 +424,7 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
        size = "Esperanza de vida") +
   theme_minimal()
 ```
-#Probando para visualización
+# Probando para visualización
 
 ```{r}
 brasil_data <- base_completa %>%
@@ -603,5 +606,9 @@ ggplot(base_continente, aes(x = continente, y = valor, fill = variable)) +
   ) +
   theme_minimal()
 
+```
+
+```{r}
+write.csv(base_completa, "Datos/Base_Datos_depurada/base_completa.csv", row.names = FALSE)
 ```
 
