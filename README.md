@@ -15,8 +15,12 @@ En cuanto a los objetivos específicos son:
 2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
 
 Ante estos objetivos he decidido trabajar con tres conjuntos de datos disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
+
 •	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
+
 •	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
+
 •	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
+
 Estos conjuntos de datos cubren periodos desde 1800 hasta 2100, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
 
