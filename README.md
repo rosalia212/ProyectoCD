@@ -24,3 +24,17 @@ Ante estos objetivos he decidido trabajar con tres conjuntos de datos disponible
 
 Estos conjuntos de datos cubren periodos desde 1800 hasta 2100, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
 
+# BASE DE DATOS ORIGINAL
+
+En esta carpeta vas a encontrar las tres bases de datos antes mencionadas en su formato EXCEL.
+
+# CODIGO DE DEPURACIÓN
+
+En el documento codigo-depuracion.RMD se puede encontrar el documento donde se realizó la depuración y también donde se empezó a realizar gráficos comparaciones y análisis para el Reto 1.
+El documento codigo-depuracion.pdf se puede encontrar el mismo pero renderizado para PDF. Para poder acceder a el más facilmente.
+
+# Base de Datos Depurada.
+
+Al terminar la depuración del código, se colocó la base de datos en la carpeta correspondiente. 
+
+# 
