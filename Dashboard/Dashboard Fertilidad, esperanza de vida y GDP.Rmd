@@ -1,0 +1,450 @@
+---
+title: "Relación entre la fecundidad, la esperanza de vida de las mujeres y el Producto interno bruto (GDP)"
+author: "Rosalia Carballo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    social: menu
+    source_code: embed
+runtime: shiny
+---
+
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(readxl)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(countrycode)
+library(scales)
+library(maps)
+library(DT)
+library(lorem)
+library(png)
+library(grid)
+
+# Establecer ruta solo si NO estamos en modo shiny
+if (is.null(shiny::getDefaultReactiveDomain())) {
+  knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+}
+
+```
+
+
+```{r}
+Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv")
+
+Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimiento_por_mujer", "continente", "gdp_bajo", "gdp_grupo")) 
+
+```
+Datos Comparativos {data-icon="fa-data"}
+=======================================================================
+
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+
+```{r}
+
+selectInput("year_sel", label = "Selecciona un año", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$year))), 
+            selected = "Todos", width = "200px")
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+
+
+### Fecundidad mayor número de hijos por país
+
+```{r}
+
+renderDataTable({
+
+# Filtrar por año
+top_pais <- Datos_FEGDP %>%
+  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(desc(nacimientos_por_mujer)) %>%
+  slice(1)
+
+  
+# Crear una columna con el HTML de la bandera (Flagpedia usa códigos ISO en minúscula)
+codigo_iso <- countrycode(top_pais$country, "country.name", "iso2c") %>% tolower()
+top_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+top_pais_vis <- top_pais %>%
+  select(País = country,
+         Año = year,
+         `Hijos por mujer` = nacimientos_por_mujer,
+         Bandera)
+
+# Mostrar como tabla interactiva con imagen embebida
+datatable(top_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+```
+
+### Esperanza de Vida con la edad más longeva
+
+```{r}
+renderDataTable({
+  
+# Filtrar el país con mayor número de hijos por mujer en 2021
+top_pais <- Datos_FEGDP %>%
+ filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(desc(esperanza_de_vida)) %>%
+  slice(1)
+
+# Crear una columna con el HTML de la bandera (Flagpedia usa códigos ISO en minúscula)
+codigo_iso <- countrycode(top_pais$country, "country.name", "iso2c") %>% tolower()
+top_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+top_pais_vis <- top_pais %>%
+  select(País = country,
+         Año = year,
+         `Edad` = esperanza_de_vida,
+         Bandera)
+
+# Mostrar como tabla interactiva con imagen embebida
+datatable(top_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+```
+
+### Producto Interno Bruto más alto
+
+```{r}
+renderDataTable({
+
+# Filtrar el país con mayor número de hijos por mujer en 2021
+top_pais <- Datos_FEGDP %>%
+  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(desc(producto_por_capita)) %>%
+  slice(1)
+
+# Crear una columna con el HTML de la bandera (Flagpedia usa códigos ISO en minúscula)
+codigo_iso <- countrycode(top_pais$country, "country.name", "iso2c") %>% tolower()
+top_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+top_pais_vis <- top_pais %>%
+  select(País = country,
+         Año = year,
+         `GDP` = producto_por_capita,
+         Bandera)
+
+# Mostrar como tabla interactiva con imagen embebida
+datatable(top_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+### Fecundidad menor número de hijos
+
+```{r}
+renderDataTable({
+  
+# Filtrar el país con menor número de hijos por mujer en 2021
+bottom_pais <- Datos_FEGDP %>%
+  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(nacimientos_por_mujer) %>%
+  slice(1)
+
+# Obtener el código ISO del país en minúsculas
+codigo_iso_bottom <- countrycode(bottom_pais$country, "country.name", "iso2c") %>% tolower()
+
+# Agregar la bandera como imagen HTML
+bottom_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso_bottom, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+bottom_pais_vis <- bottom_pais %>%
+  select(País = country,
+         Año = year,
+         `Hijos por mujer` = nacimientos_por_mujer,
+         Bandera)
+
+# Mostrar como tabla interactiva
+datatable(bottom_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+```
+
+### Esperanza de Vida con la edad más joven
+
+```{r}
+renderDataTable({
+
+# Filtrar el país con menor número de hijos por mujer en 2021
+bottom_pais <- Datos_FEGDP %>%
+  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(esperanza_de_vida) %>%
+  slice(1)
+
+# Obtener el código ISO del país en minúsculas
+codigo_iso_bottom <- countrycode(bottom_pais$country, "country.name", "iso2c") %>% tolower()
+
+# Agregar la bandera como imagen HTML
+bottom_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso_bottom, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+bottom_pais_vis <- bottom_pais %>%
+  select(País = country,
+         Año = year,
+         `Edad` = esperanza_de_vida,
+         Bandera)
+
+# Mostrar como tabla interactiva
+datatable(bottom_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+```
+
+### Producto Interno Bruto más bajo
+
+```{r}
+renderDataTable({
+
+# Filtrar el país con menor número de hijos por mujer en 2021
+bottom_pais <- Datos_FEGDP %>%
+  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  arrange(producto_por_capita) %>%
+  slice(1)
+
+# Obtener el código ISO del país en minúsculas
+codigo_iso_bottom <- countrycode(bottom_pais$country, "country.name", "iso2c") %>% tolower()
+
+# Agregar la bandera como imagen HTML
+bottom_pais$Bandera <- paste0('<img src="https://flagcdn.com/w80/', codigo_iso_bottom, '.png" height="30">')
+
+# Seleccionar columnas a mostrar
+bottom_pais_vis <- bottom_pais %>%
+  select(País = country,
+         Año = year,
+         `GDP` = producto_por_capita,
+         Bandera)
+
+# Mostrar como tabla interactiva
+datatable(bottom_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE))
+})
+```
+
+Gráficos Combinación de Variables  {data-icon="fa-signal"}
+=======================================================================
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+
+```{r}
+
+selectInput("pais_sel", label = "Selecciona un pais", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$country))), 
+            selected = "Todos", width = "200px")
+selectInput("continent_sel", label = "Selecciona un continente", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$continente))), 
+            selected = "Todos", width = "200px")
+```
+
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Fecundidad y Esperanza de vida según país o continente
+
+```{r}
+renderPlot({
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(
+      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
+      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+  
+ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.4, color = "darkred") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(title = "Relación entre hijos por mujer 
+       y esperanza de vida", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    axis.title = element_text(size = 15)
+  )
+
+})
+```
+
+Column {data-width=350 data-height=500}
+-----------------------------------------------------------------------
+
+### GDP y Fecundidad
+
+```{r}
+
+renderPlot({
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(
+      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
+      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+
+ggplot(datos_filtrados, aes(x = producto_por_capita, y = nacimientos_por_mujer)) +
+  geom_point(alpha = 0.4, color = "darkgreen") +
+  scale_x_log10() +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Relación entre GDP y Cantidad de hijos por mujer", x = "GDP per cápita (log)", y = "Hijos por mujer") +
+  theme_minimal()+  
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    axis.title = element_text(size = 15)
+  )
+})
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### GDP y Esperanza de vida
+
+```{r}
+renderPlot({
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(
+      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
+      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+
+ggplot(datos_filtrados, aes(x = producto_por_capita, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.3, color = "darkblue") +
+  scale_x_log10() +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Relación entre GDP per cápita 
+       y esperanza de vida", x = "GDP per cápita (log)", y = "Esperanza de vida") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    axis.title = element_text(size = 15)
+  )
+})
+```
+
+
+Gráficos de Interacción avanzada {data-icon="fa-signal"}
+=======================================================================
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+```{r}
+
+selectInput("pais_sel", label = "Selecciona un pais", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$country))), 
+            selected = "Todos", width = "200px")
+selectInput("continent_sel", label = "Selecciona un continente", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$continente))), 
+            selected = "Todos", width = "200px")
+selectInput("year_sel", label = "Selecciona un año", 
+            choices = c("Todos", sort(unique(Datos_FEGDP$year))), 
+            selected = "Todos", width = "200px")
+
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Fecundidad, Esperanza y GDP según País, continente y año.
+
+
+```{r}
+# Filtrar para un año específico (por ejemplo 2021)
+
+renderPlot({
+  
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(
+      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
+      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel,
+      if (input$year_sel == "Todos") TRUE else year== as.numeric(input$year_sel), 
+      !is.na(producto_por_capita), 
+      !is.na(nacimientos_por_mujer), 
+      !is.na(esperanza_de_vida)
+)
+
+# Gráfico
+ggplot(datos_filtrados, aes(x = producto_por_capita, 
+                            y = nacimientos_por_mujer, 
+                            size = esperanza_de_vida, 
+                            color = esperanza_de_vida)) +
+  geom_point(alpha = 0.8) +
+  scale_x_log10(labels = dollar_format(prefix = "$")) +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida (2021)",
+       x = "Producto Interno Bruto per cápita (log)",
+       y = "Hijos por mujer",
+       color = "Esperanza de vida (años)",
+       size = "Esperanza de vida") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    axis.title = element_text(size = 15)
+  )
+})
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### GDP y Esperanza de vida
+
+```{r}
+
+```
+
+Tabla Dinámica {data-icon="fa-table"}
+=======================================================================
+
+```{r}
+datatable(Datos_FEGDP,
+          caption= "Datos fertilidad y esperanza de vida de mujeres y Producto Interno Bruto",
+          rownames= TRUE,
+          filter= "top",
+          options= list(pageLength = 25)
+)
+```
+
+
+Acerca del estudio {data-icon="fa-globe"}
+=======================================================================
+
+
+Introducción
+
+Esta propuesta de diseñar una investigación en ciencias de datos me brinda la libertad de explorar con mayor profundidad temas sociales que me atraviesan personalmente. Al revisar las bases de datos disponibles en Gapminder, encontré una gran variedad de información relacionada con las mujeres, lo que despertó en mí una inquietud sobre la posible relación entre la longevidad femenina y la maternidad.
+En Costa Rica, existe una expresión popular según la cual “tener hijos te riega las bilis”, lo que en el imaginario colectivo podría asociarse con la idea de que la maternidad acorta la vida. Esta creencia me llevó a preguntarme si realmente existe una relación significativa entre la esperanza de vida de las mujeres y la cantidad promedio de hijos o hijas que tienen.
+En lo personal, mi familia ilustra esta interrogante de forma particular. Mi madre tuvo una sola hermana, quien no tuvo hijos y falleció a una edad relativamente baja para los estándares actuales. Por otro lado, espero que mi madre —quien sí tuvo hijos— viva muchos más años que el promedio nacional. Aunque anecdótica, esta observación familiar me motivó a profundizar en la investigación científica sobre el tema.
+En el proceso, encontré tres estudios que llamaron mi atención. Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. Por su parte, Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
+Me resulta interesante cómo estas investigaciones se reflejan, de alguna forma, en la experiencia de mi propia familia. A mis 35 años, nunca había considerado que la decisión de tener hijos pudiera estar vinculada con la longevidad. Aunque esta no ha sido una motivación personal, estos hallazgos abren la posibilidad de considerar la maternidad desde una perspectiva distinta.
+Por otro lado, Hampton (2021) analiza la relación entre desarrollo y fecundidad, señalando que, aunque existe la idea de que a mayor desarrollo económico se podría esperar un aumento de la fecundidad, en la práctica no se observa una asociación directa. Su estudio concluye que, al menos en la última década, los niveles elevados de desarrollo humano ya no están vinculados con repuntes en la tasa de natalidad.
+
+Objetivos
+
+Ante estas inquietudes el Objetivo General es:
+Explorar la posible relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
+En cuanto a los objetivos específicos son:
+1.	Analizar patrones y tendencias en la relación entre esperanza de vida femenina y número promedio de hijos por mujer, identificando posibles asociaciones según región geográfica y a lo largo del tiempo.
+2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
+Como se menciona en los objetivos, he decidido trabajar con tres conjuntos de datos disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
+•	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
+•	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
+•	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
+Estos conjuntos de datos cubren periodos desde 1800 hasta 210 vbg 0, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
+
+Resultados Generales
+
+
+
