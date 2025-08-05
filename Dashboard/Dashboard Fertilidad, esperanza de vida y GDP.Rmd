@@ -482,12 +482,14 @@ renderPlot({
     theme_minimal()
 })
 ```
-```
+
 
 Tabla Dinámica {data-icon="fa-table"}
 =======================================================================
 
 ```{r}
+
+
 datatable(Datos_FEGDP,
           caption= "Datos fertilidad y esperanza de vida de mujeres y Producto Interno Bruto",
           rownames= TRUE,
@@ -522,6 +524,16 @@ Como se menciona en los objetivos, he decidido trabajar con tres conjuntos de da
 •	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
 •	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
 Estos conjuntos de datos cubren periodos desde 1800 hasta 210 vbg 0, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
+
+
+**Construcción del Dashboard**
+
+La creación de un dashboard permite visualizar información que, por otros medios, no sería posible explorar con la misma claridad. El dashboard titulado "Relación entre fecundidad, esperanza de vida de las mujeres y el Producto Interno Bruto (PIB)" fue desarrollado con el propósito de cumplir los objetivos planteados previamente. Para su diseño, se tomó como referencia el boceto propuesto en el Reto 1.
+
+
+Aunque no se logró replicar visualmente el diseño del boceto original debido a las limitaciones propias en la herramienta en R, sí fue posible implementar una funcionalidad que permite consultar la información de forma efectiva y dinámica.
+
+En la primera sección del dashboard, el objetivo era ofrecer una visión general de las tres variables principales. En lugar de utilizar gráficos, se optó por presentar los datos mediante tablas dinámicas que permiten al usuario consultar la información según el año seleccionado. Esta decisión respondió al interés de mantener la lógica de visualización del boceto original, que incluye botones para retroceder en intervalos de 10 años. Sin embargo, al implementar un input en R para la selección del año, se consideró que no era necesario replicar dichos botones, ya que el usuario puede seleccionar libremente el año deseado desde un menú desplegable. 
 
 **Resultados Generales**
 
