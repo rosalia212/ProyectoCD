@@ -37,9 +37,10 @@ if (is.null(shiny::getDefaultReactiveDomain())) {
 
 
 ```{r}
-Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv")
+Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
 
-Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimiento_por_mujer", "continente", "gdp_bajo", "gdp_grupo")) 
+
+Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mujer", "continente", "gdp_grupo")) 
 
 ```
 Datos Comparativos {data-icon="fa-data"}
@@ -489,7 +490,6 @@ Tabla Dinámica {data-icon="fa-table"}
 
 ```{r}
 
-
 datatable(Datos_FEGDP,
           caption= "Datos fertilidad y esperanza de vida de mujeres y Producto Interno Bruto",
           rownames= TRUE,
@@ -534,6 +534,17 @@ La creación de un dashboard permite visualizar información que, por otros medi
 Aunque no se logró replicar visualmente el diseño del boceto original debido a las limitaciones propias en la herramienta en R, sí fue posible implementar una funcionalidad que permite consultar la información de forma efectiva y dinámica.
 
 En la primera sección del dashboard, el objetivo era ofrecer una visión general de las tres variables principales. En lugar de utilizar gráficos, se optó por presentar los datos mediante tablas dinámicas que permiten al usuario consultar la información según el año seleccionado. Esta decisión respondió al interés de mantener la lógica de visualización del boceto original, que incluye botones para retroceder en intervalos de 10 años. Sin embargo, al implementar un input en R para la selección del año, se consideró que no era necesario replicar dichos botones, ya que el usuario puede seleccionar libremente el año deseado desde un menú desplegable. 
+
+Asimismo, para mejorar la visualización, se incorporó el nombre del país, el año seleccionado, la variable correspondiente y la bandera del país, aportando un componente visual atractivo y fácil de interpretar.
+
+La segunda sección, dedicada a los gráficos comparativos de variables, presenta tres gráficos de dispersión con distintos colores, lo que facilita su diferenciación. Además, se añadió la opción de seleccionar un país o continente, lo que permite analizar cómo varía la correlación entre las tres variables seleccionadas según el contexto geográfico.
+
+En la tercera sección, correspondiente a los gráficos de interacción avanzada, se representa la relación entre las tres variables mediante un gráfico de dispersión: el eje x representa el PIB (GDP), el eje y la tasa de fecundidad (hijos por mujer), mientras que el tamaño de los puntos indica la esperanza de vida. Esta visualización permite captar de forma integrada la interacción entre las variables clave del estudio.
+
+Finalmente, por curiosidad y siguiendo el diseño del boceto original, se incluyeron dos gráficos de dispersión adicionales que permiten explorar la relación inversa entre las variables. El primero permite al usuario seleccionar una cantidad de hijos deseada y visualizar la esperanza de vida asociada a ese nivel de fecundidad. El segundo gráfico permite seleccionar una edad específica (esperanza de vida) para observar cuántos hijos, en promedio, tienen las mujeres que alcanzan esa edad. Estas visualizaciones brindan un enfoque interactivo y didáctico para comprender los patrones entre fecundidad y longevidad femenina.
+
+
+
 
 **Resultados Generales**
 
