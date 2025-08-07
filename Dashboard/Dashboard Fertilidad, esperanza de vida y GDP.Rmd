@@ -53,7 +53,7 @@ Column {data-width=100}
 
 ```{r}
 
-selectInput("year_sel", label = "Selecciona un año", 
+selectInput("year_sel1", label = "Selecciona un año", 
             choices = c("Todos", sort(unique(Datos_FEGDP$year))), 
             selected = "Todos", width = "200px")
 ```
@@ -72,7 +72,7 @@ renderDataTable({
 
 # Filtrar por año
 top_pais <- Datos_FEGDP %>%
-  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(desc(nacimientos_por_mujer)) %>%
   slice(1)
 
@@ -100,7 +100,7 @@ renderDataTable({
   
 # Filtrar el país con mayor número de hijos por mujer en 2021
 top_pais <- Datos_FEGDP %>%
- filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+ filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(desc(esperanza_de_vida)) %>%
   slice(1)
 
@@ -127,7 +127,7 @@ renderDataTable({
 
 # Filtrar el país con mayor número de hijos por mujer en 2021
 top_pais <- Datos_FEGDP %>%
-  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(desc(producto_por_capita)) %>%
   slice(1)
 
@@ -157,7 +157,7 @@ renderDataTable({
   
 # Filtrar el país con menor número de hijos por mujer en 2021
 bottom_pais <- Datos_FEGDP %>%
-  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(nacimientos_por_mujer) %>%
   slice(1)
 
@@ -186,7 +186,7 @@ renderDataTable({
 
 # Filtrar el país con menor número de hijos por mujer en 2021
 bottom_pais <- Datos_FEGDP %>%
-  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(esperanza_de_vida) %>%
   slice(1)
 
@@ -213,9 +213,9 @@ datatable(bottom_pais_vis, escape = FALSE, options = list(dom = 't', paging = FA
 ```{r}
 renderDataTable({
 
-# Filtrar el país con menor número de hijos por mujer en 2021
+# Filtrar el país con menor número de hijos por mujer
 bottom_pais <- Datos_FEGDP %>%
-  filter(if (input$year_sel == "Todos") TRUE else year == as.numeric(input$year_sel)) %>%
+  filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(producto_por_capita) %>%
   slice(1)
 
@@ -246,10 +246,10 @@ Column {data-width=100}
 
 ```{r}
 
-selectInput("pais_sel", label = "Selecciona un pais", 
+selectInput("pais_sel2", label = "Selecciona un pais", 
             choices = c("Todos", sort(unique(Datos_FEGDP$country))), 
             selected = "Todos", width = "200px")
-selectInput("continent_sel", label = "Selecciona un continente", 
+selectInput("continent_sel2", label = "Selecciona un continente", 
             choices = c("Todos", sort(unique(Datos_FEGDP$continente))), 
             selected = "Todos", width = "200px")
 ```
@@ -265,8 +265,8 @@ Column {data-width=350}
 renderPlot({
   datos_filtrados <- Datos_FEGDP %>%
     filter(
-      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
-      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+      if (input$pais_sel2== "Todos") TRUE else country == input$pais_sel2,
+      if (input$continent_sel2 == "Todos") TRUE else continente ==input$continent_sel2)
   
 ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
   geom_point(alpha = 0.4, color = "darkred") +
@@ -292,8 +292,8 @@ Column {data-width=350 data-height=500}
 renderPlot({
   datos_filtrados <- Datos_FEGDP %>%
     filter(
-      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
-      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+      if (input$pais_sel2== "Todos") TRUE else country == input$pais_sel2,
+      if (input$continent_sel2 == "Todos") TRUE else continente ==input$continent_sel2)
 
 ggplot(datos_filtrados, aes(x = producto_por_capita, y = nacimientos_por_mujer)) +
   geom_point(alpha = 0.4, color = "darkgreen") +
@@ -317,8 +317,8 @@ Column {data-width=350}
 renderPlot({
   datos_filtrados <- Datos_FEGDP %>%
     filter(
-      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
-      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel)
+      if (input$pais_sel2== "Todos") TRUE else country == input$pais_sel2,
+      if (input$continent_sel2 == "Todos") TRUE else continente ==input$continent_sel2)
 
 ggplot(datos_filtrados, aes(x = producto_por_capita, y = esperanza_de_vida)) +
   geom_point(alpha = 0.3, color = "darkblue") +
@@ -342,13 +342,13 @@ Column {data-width=100}
 -----------------------------------------------------------------------
 ```{r}
 
-selectInput("pais_sel", label = "Selecciona un pais", 
+selectInput("pais_sel3", label = "Selecciona un pais", 
             choices = c("Todos", sort(unique(Datos_FEGDP$country))), 
             selected = "Todos", width = "200px")
-selectInput("continent_sel", label = "Selecciona un continente", 
+selectInput("continent_sel3", label = "Selecciona un continente", 
             choices = c("Todos", sort(unique(Datos_FEGDP$continente))), 
             selected = "Todos", width = "200px")
-selectInput("year_sel", label = "Selecciona un año", 
+selectInput("year_sel3", label = "Selecciona un año", 
             choices = c("Todos", sort(unique(Datos_FEGDP$year))), 
             selected = "Todos", width = "200px")
 
@@ -362,15 +362,14 @@ Column {data-width=350}
 
 
 ```{r}
-# Filtrar para un año específico (por ejemplo 2021)
 
 renderPlot({
   
   datos_filtrados <- Datos_FEGDP %>%
     filter(
-      if (input$pais_sel== "Todos") TRUE else country == input$pais_sel,
-      if (input$continent_sel == "Todos") TRUE else continente ==input$continent_sel,
-      if (input$year_sel == "Todos") TRUE else year== as.numeric(input$year_sel), 
+      if (input$pais_sel3== "Todos") TRUE else country == input$pais_sel3,
+      if (input$continent_sel3 == "Todos") TRUE else continente ==input$continent_sel3,
+      if (input$year_sel3 == "Todos") TRUE else year== as.numeric(input$year_sel3), 
       !is.na(producto_por_capita), 
       !is.na(nacimientos_por_mujer), 
       !is.na(esperanza_de_vida)
@@ -384,7 +383,7 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
   geom_point(alpha = 0.8) +
   scale_x_log10(labels = dollar_format(prefix = "$")) +
   scale_color_gradient(low = "red", high = "blue") +
-  labs(title = "Relación entre GDP, fecundidad y esperanza de vida (2021)",
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida",
        x = "Producto Interno Bruto per cápita (log)",
        y = "Hijos por mujer",
        color = "Esperanza de vida (años)",
@@ -405,7 +404,7 @@ Column {data-width=100}
 ### Cantidad de hijos vrs Esperanza de vida
 ```{r}
 
-selectInput("hijos_sel", label = "Selecciona la cantidad de hijes", 
+selectInput("hijos_sel3", label = "Selecciona la cantidad de hijes", 
             choices = c("Todos", sort(unique(Datos_FEGDP$nacimientos_por_mujer))), 
             selected = "Todos", width = "200px")
 
@@ -414,7 +413,7 @@ selectInput("hijos_sel", label = "Selecciona la cantidad de hijes",
 ### Esperanza de vida vida vrs cantidad de hijos
 ```{r}
 
-selectInput("vida_sel", label = "Selecciona la esperanza de vida", 
+selectInput("vida_sel3", label = "Selecciona la esperanza de vida", 
             choices = c("Todos", sort(unique(Datos_FEGDP$esperanza_de_vida))), 
             selected = "Todos", width = "200px")
 
@@ -429,7 +428,7 @@ Column {data-width=350}
 ```{r}
 renderPlot({
   
-   hijos <- if (input$hijos_sel == "Todos") NA else as.numeric(input$hijos_sel)
+   hijos <- if (input$hijos_sel3 == "Todos") NA else as.numeric(input$hijos_sel3)
   
   # Filtrar datos según los inputs
   datos_filtrados <- Datos_FEGDP %>%
@@ -459,7 +458,7 @@ renderPlot({
 ```{r}
 renderPlot({
   
-   vida <- if (input$vida_sel == "Todos") NA else as.numeric(input$vida_sel)
+   vida <- if (input$vida_sel3 == "Todos") NA else as.numeric(input$vida_sel3)
   
   # Filtrar datos según los inputs
   datos_filtrados <- Datos_FEGDP %>%
@@ -515,10 +514,15 @@ Por otro lado, Hampton (2021) analiza la relación entre desarrollo y fecundidad
 **Objetivos**
 
 Ante estas inquietudes el Objetivo General es:
+
 Explorar la posible relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
+
 En cuanto a los objetivos específicos son:
+
 1.	Analizar patrones y tendencias en la relación entre esperanza de vida femenina y número promedio de hijos por mujer, identificando posibles asociaciones según región geográfica y a lo largo del tiempo.
+
 2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
+
 Como se menciona en los objetivos, he decidido trabajar con tres conjuntos de datos disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
 •	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
 •	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
@@ -541,12 +545,37 @@ La segunda sección, dedicada a los gráficos comparativos de variables, present
 
 En la tercera sección, correspondiente a los gráficos de interacción avanzada, se representa la relación entre las tres variables mediante un gráfico de dispersión: el eje x representa el PIB (GDP), el eje y la tasa de fecundidad (hijos por mujer), mientras que el tamaño de los puntos indica la esperanza de vida. Esta visualización permite captar de forma integrada la interacción entre las variables clave del estudio.
 
-Finalmente, por curiosidad y siguiendo el diseño del boceto original, se incluyeron dos gráficos de dispersión adicionales que permiten explorar la relación inversa entre las variables. El primero permite al usuario seleccionar una cantidad de hijos deseada y visualizar la esperanza de vida asociada a ese nivel de fecundidad. El segundo gráfico permite seleccionar una edad específica (esperanza de vida) para observar cuántos hijos, en promedio, tienen las mujeres que alcanzan esa edad. Estas visualizaciones brindan un enfoque interactivo y didáctico para comprender los patrones entre fecundidad y longevidad femenina.
+Al lado derecho de la tercera sección, por curiosidad y siguiendo el diseño del boceto original, se incluyeron dos gráficos de dispersión adicionales que permiten explorar la relación inversa entre las variables. El primero permite al usuario seleccionar una cantidad de hijos deseada y visualizar la esperanza de vida asociada a ese nivel de fecundidad. El segundo gráfico permite seleccionar una edad específica (esperanza de vida) para observar cuántos hijos, en promedio, tienen las mujeres que alcanzan esa edad. Estas visualizaciones brindan un enfoque interactivo y didáctico para comprender los patrones entre fecundidad y longevidad femenina.
 
-
+Para finalizar, se incluye una tabla dinámica que permite a las personas usuarias explorar libremente los datos, realizar diferentes combinaciones y responder a nuevas inquietudes o curiosidades que puedan surgir durante la interacción.
 
 
 **Resultados Generales**
 
+Ante las investigaciones presentadas en la introducción, surge la duda de si tener menos hijos realmente alarga la esperanza de vida femenina, o si, por el contrario, tener entre 2 y 5 hijos genera un efecto similar. Esta pregunta guía el análisis exploratorio presentado en este dashboard.
+
+En la sección de gráficos de combinación de variables, el gráfico que relaciona fecundidad y esperanza de vida muestra una tendencia general decreciente: a mayor número de hijos por mujer, menor esperanza de vida. Sin embargo, existen excepciones. Algunos países con 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no se puede afirmar de forma categórica que tener menos hijos siempre incrementa la longevidad. Los datos sugieren que a partir de 2.5 hijos por mujer, la esperanza de vida comienza a descender de manera más marcada.
+
+En términos regionales, Europa presenta un comportamiento particular. Se observa una caída en la esperanza de vida en países con 2 hijos por mujer, aunque no se trata de una reducción sistemática. De hecho, varios países con solo 1 hijo muestran menor esperanza de vida que aquellos con 2, lo cual podría deberse a factores contextuales como el envejecimiento poblacional o las políticas de salud.
+
+En el caso de África, se registra la esperanza de vida más baja en comparación con otros continentes, manteniéndose la tendencia decreciente a pesar de una alta fecundidad. En esta región, el bajo nivel del PIB per cápita también resalta como un elemento que podría influir en los resultados, reflejando bajos niveles de desarrollo económico.
+
+En las Américas, se conserva la tendencia general: los países con mayor fecundidad tienden a registrar niveles más bajos de esperanza de vida. Este patrón refuerza la hipótesis de una correlación negativa entre estas dos variables, aunque no necesariamente causal.
+
+En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años. Por otro lado, los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 87 y 96 años. Esto sugiere que los países con baja fecundidad tienden a presentar mayores niveles de longevidad. Sin embargo, no se observa un patrón lineal estricto: no puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
+
+Es importante aclarar que los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones.
+
+Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
+
+En cuanto al PIB per cápita, el gráfico de interacción avanzada muestra cómo esta variable se asocia tanto con fecundidad como con esperanza de vida. En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta (representada en color azul). Esto evidencia que, si bien la baja fecundidad puede asociarse con mayor longevidad, el nivel de desarrollo económico es un factor modulador clave.
+
+Al comparar países según sus niveles de ingreso, se observa que en aquellos con mayor PIB per cápita, la relación entre baja fecundidad y alta esperanza de vida es más clara y estable. En contraste, los países con ingresos bajos presentan relaciones más dispersas, posiblemente influenciadas por factores externos como conflictos, pobreza estructural o debilidad institucional.
+
+En cuanto al eje temporal, en el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se aprecia que en 1970 la esperanza de vida promedio mundial rondaba los 80 años. Para el año 2000, esta cifra aumentó casi en una década, acercándose a los 90 años. Este incremento evidencia mejoras globales en salud, condiciones de vida y acceso a servicios básicos.
+
+Aunque la fecundidad no es un determinante único en la decisión de tener hijos ni en la esperanza de vida, constituye un elemento relevante en el análisis con perspectiva de género, ya que las decisiones reproductivas están influenciadas por factores sociales, económicos y culturales.
+
+En conclusión, los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. No obstante, esta investigación representa solo un punto de partida para análisis más precisos. En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres, sin considerar aún factores médicos o genéticos. Además, será necesario utilizar otros tipos de gráficos, técnicas estadísticas e indicadores adicionales para abordar nuevas preguntas y profundizar en las causas detrás de estas asociaciones.
 
 
