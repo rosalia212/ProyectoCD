@@ -64,7 +64,7 @@ Column {data-width=350}
 
 
 
-### Fecundidad mayor número de hijos por país
+### País con mayor fecundidad en 2021
 
 ```{r}
 
@@ -93,7 +93,7 @@ datatable(top_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE
 })
 ```
 
-### Esperanza de Vida con la edad más longeva
+### País con mayor esperanza de vida
 
 ```{r}
 renderDataTable({
@@ -150,8 +150,7 @@ datatable(top_pais_vis, escape = FALSE, options = list(dom = 't', paging = FALSE
 
 Column {data-width=350}
 -----------------------------------------------------------------------
-### Fecundidad menor número de hijos
-
+### País con menor fecundidad 
 ```{r}
 renderDataTable({
   
@@ -179,12 +178,12 @@ datatable(bottom_pais_vis, escape = FALSE, options = list(dom = 't', paging = FA
 })
 ```
 
-### Esperanza de Vida con la edad más joven
+### País con menor esperanza de vida
 
 ```{r}
 renderDataTable({
 
-# Filtrar el país con menor número de hijos por mujer en 2021
+# Filtrar el país con menor número de hijos por mujer
 bottom_pais <- Datos_FEGDP %>%
   filter(if (input$year_sel1 == "Todos") TRUE else year == as.numeric(input$year_sel1)) %>%
   arrange(esperanza_de_vida) %>%
