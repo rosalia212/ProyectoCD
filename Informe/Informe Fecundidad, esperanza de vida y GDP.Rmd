@@ -344,7 +344,7 @@ Column {data-width=250}
 
    hijos <- 2
   
-  # Filtrar datos según los inputs
+  # Filtrar datos segun 2 hijos
   datos_filtrados <- Datos_FEGDP %>%
     filter(!is.na(nacimientos_por_mujer),
       !is.na(esperanza_de_vida)

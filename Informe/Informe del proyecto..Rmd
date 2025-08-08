@@ -147,44 +147,24 @@ ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
 En el caso de África, se registra la esperanza de vida más baja en comparación con otros continentes, manteniéndose la tendencia decreciente a pesar de una alta fecundidad.
 
 ```{r}
-datos_filtrados <- Datos_FEGDP %>%
-  filter(continente == "Africa")
-  
-ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
-  geom_point(alpha = 0.4, color = "darkred") +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  labs(title = "Relación entre hijos por mujer 
-       y esperanza de vida de África", x = "Hijos por mujer", y = "Esperanza de vida") +
+ggplot(Datos_FEGDP, aes(x = continente, y = esperanza_de_vida)) +
+  geom_boxplot(fill = "green") +
+  labs(title = "Esperanza de vida por continente", y = "Esperanza de vida", x = "Continente") +
   theme_minimal()
+
 ```
 En esta región, el bajo nivel del PIB per cápita también resalta como un elemento que podría influir en los resultados, reflejando bajos niveles de desarrollo económico.
 
 ```{r}
-datos_filtrados <- Datos_FEGDP %>%
-  filter(continente == "Africa")
-
-ggplot(datos_filtrados, aes(x = producto_por_capita, y = esperanza_de_vida)) +
-  geom_point(alpha = 0.3, color = "darkblue") +
-  scale_x_log10() +
-  geom_smooth(method = "loess", se = FALSE, color = "black") +
-  labs(title = "Relación entre GDP per cápita 
-       y esperanza de vida de África", x = "GDP per cápita (log)", y = "Esperanza de vida") +
-  theme_minimal()+
-  theme(
-    plot.title = element_text(size = 20, face = "bold"),
-    axis.title = element_text(size = 15)
-  )
+ggplot(Datos_FEGDP, aes(x = continente, y = producto_por_capita)) +
+  geom_boxplot(fill = "blue") +
+  labs(title = "Producto Interno Bruto por continente", y = "GDP", x = "Continente") +
+  theme_minimal()
 ```
 
 En las Américas, se conserva la tendencia general: los países con mayor fecundidad tienden a registrar niveles más bajos de esperanza de vida. Este patrón refuerza la hipótesis de una correlación negativa entre estas dos variables, aunque no necesariamente causal.
 
 
-```{r}
-ggplot(Datos_FEGDP, aes(x = continente, y = esperanza_de_vida)) +
-  geom_boxplot(fill = "lightblue") +
-  labs(title = "Esperanza de vida por continente", y = "Esperanza de vida", x = "Continente") +
-  theme_minimal()
-```
 
 
 ```{r}
