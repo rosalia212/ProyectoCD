@@ -179,7 +179,71 @@ ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
   theme_minimal()
 ```
 
-En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años. Por otro lado, los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 87 y 96 años. Esto sugiere que los países con baja fecundidad tienden a presentar mayores niveles de longevidad. Sin embargo, no se observa un patrón lineal estricto: no puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
+En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años.
+
+
+```{r}
+vida_min <- 86
+vida_max <- 89
+  
+  # Filtrar datos según los inputs
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(!is.na(nacimientos_por_mujer),
+      !is.na(esperanza_de_vida)
+    ) %>%
+    filter(esperanza_de_vida >= vida_min & esperanza_de_vida <= vida_max)
+
+#Gráfico
+ ggplot(Datos_FEGDP, aes(x = esperanza_de_vida, y = nacimientos_por_mujer)) +
+    geom_point(alpha = 0.3, color = "pink") +
+    geom_point(data = datos_filtrados, aes(x = esperanza_de_vida, y = nacimientos_por_mujer), 
+               color = "blue", size = 3) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    labs(
+      title = paste("Hijos por mujer según esperanza de vida",
+                    vida_min, "y", vida_max, "años"),
+      x = "Esperanza de vida (años)",
+      y = "Hijos por mujer"
+    ) +
+    theme_minimal()
+```
+
+
+Por otro lado, los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 93 y 96 años. Esto sugiere que los países con baja fecundidad tienden a presentar mayores niveles de longevidad. Sin embargo, no se observa un patrón lineal estricto: no puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
+
+```{r}
+vida_min1 <- 93
+vida_max2 <- 96
+  
+  # Filtrar datos según los inputs
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(!is.na(nacimientos_por_mujer),
+      !is.na(esperanza_de_vida)
+    ) %>%
+    filter(esperanza_de_vida >= vida_min1 & esperanza_de_vida <= vida_max2)
+
+#Gráfico
+ ggplot(Datos_FEGDP, aes(x = esperanza_de_vida, y = nacimientos_por_mujer)) +
+    geom_point(alpha = 0.3, color = "pink") +
+    geom_point(data = datos_filtrados, aes(x = esperanza_de_vida, y = nacimientos_por_mujer), 
+               color = "blue", size = 3) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    labs(
+      title = paste("Hijos por mujer según esperanza de vida",
+                    vida_min1, "y", vida_max2, "años"),
+      x = "Esperanza de vida (años)",
+      y = "Hijos por mujer"
+    ) +
+    theme_minimal()
+```
+
+```
+
+Es importante aclarar que los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones.
+
+Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
+
+En cuanto al PIB per cápita, el gráfico de interacción avanzada muestra cómo esta variable se asocia tanto con fecundidad como con esperanza de vida. En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta (representada en color azul). Esto evidencia que, si bien la baja fecundidad puede asociarse con mayor longevidad, el nivel de desarrollo económico es un factor modulador clave.
 
 ```{r}
   datos_filtrados <- Datos_FEGDP %>%
@@ -208,12 +272,8 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
     axis.title = element_text(size = 10)
   )
 ```
+```
 
-Es importante aclarar que los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones.
-
-Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
-
-En cuanto al PIB per cápita, el gráfico de interacción avanzada muestra cómo esta variable se asocia tanto con fecundidad como con esperanza de vida. En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta (representada en color azul). Esto evidencia que, si bien la baja fecundidad puede asociarse con mayor longevidad, el nivel de desarrollo económico es un factor modulador clave.
 
 Al comparar países según sus niveles de ingreso, se observa que en aquellos con mayor PIB per cápita, la relación entre baja fecundidad y alta esperanza de vida es más clara y estable. En contraste, los países con ingresos bajos presentan relaciones más dispersas, posiblemente influenciadas por factores externos como conflictos, pobreza estructural o debilidad institucional.
 
@@ -236,7 +296,7 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
   geom_point(alpha = 0.8) +
   scale_x_log10(labels = dollar_format(prefix = "$")) +
   scale_color_gradient(low = "red", high = "blue") +
-  labs(title = "Relación entre GDP, fecundidad y esperanza de vida",
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida en 1970",
        x = "Producto Interno Bruto per cápita (log)",
        y = "Hijos por mujer",
        color = "Esperanza de vida (años)",
@@ -265,7 +325,7 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
   geom_point(alpha = 0.8) +
   scale_x_log10(labels = dollar_format(prefix = "$")) +
   scale_color_gradient(low = "red", high = "blue") +
-  labs(title = "Relación entre GDP, fecundidad y esperanza de vida",
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida en 2000",
        x = "Producto Interno Bruto per cápita (log)",
        y = "Hijos por mujer",
        color = "Esperanza de vida (años)",
@@ -282,7 +342,4 @@ Aunque la fecundidad no es un determinante único en la decisión de tener hijos
 
 En conclusión, los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. No obstante, esta investigación representa solo un punto de partida para análisis más precisos. En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres, sin considerar aún factores médicos o genéticos. Además, será necesario utilizar otros tipos de gráficos, técnicas estadísticas e indicadores adicionales para abordar nuevas preguntas y profundizar en las causas detrás de estas asociaciones.
 
-```{r}
-
-```
 
