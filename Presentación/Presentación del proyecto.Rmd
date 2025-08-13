@@ -1,35 +1,340 @@
 ---
-title: "Presentación del proyecto"
-author: "Rosalia"
-date: "2025-08-08"
-output: ioslides_presentation
+title: Relación entre Producto Interno Bruto, Esperanza de Vida y Cantidad de Hijos
+  por Mujer
+author: "Rosalia Carballo Chaves"
+date: "2025-08-13"
+output:
+  beamer_presentation: default
+  ioslides_presentation: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-## R Markdown
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+library(tidyverse)
+library(readxl)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(countrycode)
+library(scales)
+library(maps)
+library(DT)
+library(lorem)
+library(png)
+library(grid)
+library(tinytex)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
 ```
 
-## Slide with Plot
 
-```{r pressure}
-plot(pressure)
+## Introducción
+  
+Al revisar las bases de datos disponibles en Gapminder, encontré una gran variedad de información relacionada con las mujeres, lo que despertó en mí una inquietud sobre la posible relación entre la longevidad femenina y la maternidad.
+
+Tres estudios que llamaron mi atención: 
+- Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. 
+- Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
+
+A mis 35 años, nunca había considerado que la decisión de tener hijos pudiera estar vinculada con la longevidad.
+
+## Objetivo General
+
+1. Explorar la posible relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
+
+**Objetivos específicos son**
+
+1.	Analizar patrones y tendencias en la relación entre esperanza de vida femenina y número promedio de hijos por mujer, identificando posibles asociaciones según región geográfica y a lo largo del tiempo.
+
+2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
+
+
+## Extracción de Datos
+
+Disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
+
+•	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
+
+•	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
+
+•	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
+
+
+
+```{r}
+Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
+Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mujer", "continente", "gdp_grupo")) 
+
 ```
+
+## Construcción del Dashboard
+
+En la primera sección del dashboard, el objetivo era ofrecer una visión general de las tres variables principales. 
+
+La segunda sección, dedicada a los gráficos comparativos de variables, presenta tres gráficos de dispersión con distintos colores, lo que facilita su diferenciación. 
+En la tercera sección, correspondiente a los gráficos de interacción avanzada, se representa la relación entre las tres variables mediante un gráfico de dispersión.
+
+## Resultados Generales
+Ante las investigaciones presentadas en la introducción, surge la duda de si tener menos hijos realmente alarga la esperanza de vida femenina, o si, por el contrario, tener entre 2 y 5 hijos genera un efecto similar. 
+El gráfico que relaciona fecundidad y esperanza de vida muestra una tendencia general decreciente: a mayor número de hijos por mujer, menor esperanza de vida. 
+```{r grafico_vida_fecundidad, echo=FALSE, fig.width=6, fig.height=3}
+
+datos_filtrados <- Datos_FEGDP
+  
+ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.4, color = "darkred") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(title = "Relación entre hijos por mujer 
+       y esperanza de vida", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+## Algunas excepciones 
+Algunos países con 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no se puede afirmar de forma categórica que tener menos hijos siempre incrementa la longevidad. 
+
+```{r fig.width=6, fig.height=3}
+ hijos <- 1.5
+  
+  # Filtrar datos según 2 hijos
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(!is.na(nacimientos_por_mujer),
+      !is.na(esperanza_de_vida)
+    ) %>%
+    filter(abs(nacimientos_por_mujer - hijos) < 0.2)
+
+#Gráfico
+ ggplot(Datos_FEGDP, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+    geom_point(alpha = 0.3, color = "gray") +
+    geom_point(data = datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida), 
+               color = "red", size = 3) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    labs(
+      title = paste("Esperanza de vida según hijos por mujer",
+                    if (!is.na(hijos)) paste0("~", hijos) else ""),
+      x = "Hijos por mujer",
+      y = "Esperanza de vida (años)"
+    ) +
+    theme_minimal()
+```
+
+## A nivel Regional: Europa
+ Se observa una caída en la cantidad de hijos por mujeres y con esto también el aumento de la esperanza de vida en países con 2 hijos por mujer, aunque no se trata de una reducción sistemática. De hecho, varios países con solo 1 hijo muestran menor esperanza de vida que aquellos con 2, lo cual podría deberse a factores contextuales como el envejecimiento poblacional o las políticas de salud.
+
+```{r fig.width=6, fig.height=3}
+datos_filtrados <- Datos_FEGDP %>%
+  filter(continente == "Europe")
+  
+ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.4, color = "darkred") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(title = "Relación entre hijos por mujer 
+       y esperanza de vida de Europa", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+## A nivel Regional: África
+Se registra la esperanza de vida más baja en comparación con otros continentes, manteniéndose la tendencia decreciente a pesar de una alta fecundidad.
+
+```{r fig.width=8, fig.height=4}
+ggplot(Datos_FEGDP, aes(x = continente, y = esperanza_de_vida)) +
+  geom_boxplot(fill = "green") +
+  labs(title = "Esperanza de vida por continente", y = "Esperanza de vida", x = "Continente") +
+  theme_minimal()
+
+```
+
+## A nivel Regional: África
+En esta región, el bajo nivel del PIB per cápita también resalta como un elemento que podría influir en los resultados, reflejando bajos niveles de desarrollo económico.
+
+```{r fig.width=8, fig.height=4}
+ggplot(Datos_FEGDP, aes(x = continente, y = producto_por_capita)) +
+  geom_boxplot(fill = "blue") +
+  labs(title = "Producto Interno Bruto por continente", y = "GDP", x = "Continente") +
+  theme_minimal()
+```
+
+
+## A nivel Regional: Áméricas
+Se conserva la tendencia general: los países con mayor fecundidad tienden a registrar niveles más bajos de esperanza de vida. Este patrón refuerza la hipótesis de una correlación negativa entre estas dos variables, aunque no necesariamente causal.
+
+```{r fig.width=7, fig.height=3}
+datos_filtrados <- Datos_FEGDP %>%
+  filter(continente == "Americas")
+  
+ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
+  geom_point(alpha = 0.4, color = "darkred") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(title = "Relación entre hijos por mujer 
+       y esperanza de vida de America", x = "Hijos por mujer", y = "Esperanza de vida") +
+  theme_minimal()
+```
+
+## Interacción Avanzada: GDP, esperanza de vida y cantidad de hijos
+Se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años.
+
+```{r fig.width=6, fig.height=3}
+vida_min <- 86
+vida_max <- 89
+  
+  # Filtrar datos según los inputs
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(!is.na(nacimientos_por_mujer),
+      !is.na(esperanza_de_vida)
+    ) %>%
+    filter(esperanza_de_vida >= vida_min & esperanza_de_vida <= vida_max)
+
+#Gráfico
+ ggplot(Datos_FEGDP, aes(x = esperanza_de_vida, y = nacimientos_por_mujer)) +
+    geom_point(alpha = 0.3, color = "pink") +
+    geom_point(data = datos_filtrados, aes(x = esperanza_de_vida, y = nacimientos_por_mujer), 
+               color = "blue", size = 3) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    labs(
+      title = paste("Hijos por mujer según esperanza de vida",
+                    vida_min, "y", vida_max, "años"),
+      x = "Esperanza de vida (años)",
+      y = "Hijos por mujer"
+    ) +
+    theme_minimal()
+```
+
+## Interacción Avanzada: GDP, esperanza de vida y cantidad de hijos
+Los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 93 y 96 años. No puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
+
+```{r fig.width=6, fig.height=3}
+vida_min1 <- 93
+vida_max2 <- 96
+  
+  # Filtrar datos según los inputs
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(!is.na(nacimientos_por_mujer),
+      !is.na(esperanza_de_vida)
+    ) %>%
+    filter(esperanza_de_vida >= vida_min1 & esperanza_de_vida <= vida_max2)
+
+#Gráfico
+ ggplot(Datos_FEGDP, aes(x = esperanza_de_vida, y = nacimientos_por_mujer)) +
+    geom_point(alpha = 0.3, color = "pink") +
+    geom_point(data = datos_filtrados, aes(x = esperanza_de_vida, y = nacimientos_por_mujer), 
+               color = "blue", size = 3) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    labs(
+      title = paste("Hijos por mujer según esperanza de vida",
+                    vida_min1, "y", vida_max2, "años"),
+      x = "Esperanza de vida (años)",
+      y = "Hijos por mujer"
+    ) +
+    theme_minimal()
+```
+
+## Características de la investigación
+Los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales.
+
+Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
+
+## Producto Interno Bruto
+Se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta.
+
+```{r fig.width=8, fig.height=4}
+  datos_filtrados <- Datos_FEGDP %>%
+    filter(
+      !is.na(producto_por_capita), 
+      !is.na(nacimientos_por_mujer), 
+      !is.na(esperanza_de_vida)
+)
+
+# Gráfico
+ggplot(datos_filtrados, aes(x = producto_por_capita, 
+                            y = nacimientos_por_mujer, 
+                            size = esperanza_de_vida, 
+                            color = esperanza_de_vida)) +
+  geom_point(alpha = 0.8) +
+  scale_x_log10(labels = dollar_format(prefix = "$")) +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida",
+       x = "Producto Interno Bruto per cápita (log)",
+       y = "Hijos por mujer",
+       color = "Esperanza de vida (años)",
+       size = "Esperanza de vida") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 10)
+  )
+```
+
+
+## Eje Temporal: 1970
+En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se aprecia que en 1970 la esperanza de vida promedio mundial rondaba los 80 años. 
+
+
+```{r fig.width=7, fig.height=4}
+  datos_filtrados <- Datos_FEGDP %>%
+    filter( year == 1970,
+      !is.na(producto_por_capita), 
+      !is.na(nacimientos_por_mujer), 
+      !is.na(esperanza_de_vida)
+)
+
+# Gráfico
+ggplot(datos_filtrados, aes(x = producto_por_capita, 
+                            y = nacimientos_por_mujer, 
+                            size = esperanza_de_vida, 
+                            color = esperanza_de_vida)) +
+  geom_point(alpha = 0.8) +
+  scale_x_log10(labels = dollar_format(prefix = "$")) +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida en 1970",
+       x = "Producto Interno Bruto per cápita (log)",
+       y = "Hijos por mujer",
+       color = "Esperanza de vida (años)",
+       size = "Esperanza de vida") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 10)
+  )
+```
+
+## Eje Temporal: 2020
+Esta cifra aumentó casi en una década, acercándose a los 90 años. Este incremento evidencia mejoras globales en salud, condiciones de vida y acceso a servicios básicos.
+
+```{r fig.width=8, fig.height=4}
+  datos_filtrados <- Datos_FEGDP %>%
+    filter( year == 2000,
+      !is.na(producto_por_capita), 
+      !is.na(nacimientos_por_mujer), 
+      !is.na(esperanza_de_vida)
+)
+
+# Gráfico
+ggplot(datos_filtrados, aes(x = producto_por_capita, 
+                            y = nacimientos_por_mujer, 
+                            size = esperanza_de_vida, 
+                            color = esperanza_de_vida)) +
+  geom_point(alpha = 0.8) +
+  scale_x_log10(labels = dollar_format(prefix = "$")) +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Relación entre GDP, fecundidad y esperanza de vida en 2000",
+       x = "Producto Interno Bruto per cápita (log)",
+       y = "Hijos por mujer",
+       color = "Esperanza de vida (años)",
+       size = "Esperanza de vida") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 15, face = "bold"),
+    axis.title = element_text(size = 10)
+  )
+```
+
+## Ideas Finales
+
+Aunque la fecundidad no es un determinante único en la decisión de tener hijos ni en la esperanza de vida, constituye un elemento relevante en el análisis con perspectiva de género, ya que las decisiones reproductivas están influenciadas por factores sociales, económicos y culturales.
+
+Los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. 
+En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres.
 
