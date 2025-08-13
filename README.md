@@ -37,7 +37,7 @@ En esta carpeta vas a encontrar las tres bases de datos antes mencionadas en su 
 En el documento codigo-depuracion.RMD se puede encontrar el documento donde se realizó la depuración y también donde se empezó a realizar gráficos comparaciones y análisis para el Reto 1.
 El documento codigo-depuracion.pdf se puede encontrar el mismo pero renderizado para PDF. Para poder acceder a el más facilmente.
 
-# Base de Datos Depurada.
+**3. Base de Datos Depurada**
 
 Al terminar la depuración del código, se colocó la base de datos en la carpeta correspondiente. 
 
