@@ -25,11 +25,14 @@ Ante estos objetivos he decidido trabajar con tres conjuntos de datos disponible
 
 Estos conjuntos de datos cubren periodos desde 1800 hasta 2100, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
 
-# BASE DE DATOS ORIGINAL
+# Carpeta Datos
+Vas a encontrar la información general sobre los datos tanto originales como depurados.
+
+**1. Carpeta Base de Datos Original**
 
 En esta carpeta vas a encontrar las tres bases de datos antes mencionadas en su formato EXCEL.
 
-# CODIGO DE DEPURACIÓN
+**2. Carpeta Código de depuración**
 
 En el documento codigo-depuracion.RMD se puede encontrar el documento donde se realizó la depuración y también donde se empezó a realizar gráficos comparaciones y análisis para el Reto 1.
 El documento codigo-depuracion.pdf se puede encontrar el mismo pero renderizado para PDF. Para poder acceder a el más facilmente.
@@ -38,4 +41,13 @@ El documento codigo-depuracion.pdf se puede encontrar el mismo pero renderizado 
 
 Al terminar la depuración del código, se colocó la base de datos en la carpeta correspondiente. 
 
-# 
+# Carpeta Dashboard
+Puede encontrar el Dashboard interactivo para poder realizar un análisis sobre cómo se relaciona la esperanza de vida, la cantidad de hijos por mujer y el producto interno bruto. Tanto en Rmd como en html.
+
+# Carpeta Informe
+Se puede encontrar el informe del proyecto, tanto en Rmd, html como en PDF, para poder acceder a las concluisiones del proyecto. Además se puede encontrar un pequeño Dashbor no interactivo con el nombre de Informe Fecundidad, esperanza de vida y GDP.Rmd
+
+# Carpeta Presentación
+En esta carpeta puede encontrar la presentación concreta del proyecto de ciencias de datos tanto en Rmd, html y pdf.
+
+
