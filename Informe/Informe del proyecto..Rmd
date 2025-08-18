@@ -2,7 +2,9 @@
 title: "Informe del Proyecto"
 author: "Rosalia"
 date: "2025-08-08"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -212,7 +214,7 @@ print(round(cor_spearman, 3))
 
 
 ```
-Como se puede ver en el gráfico, hay una correlación positiva entre esperanza de vida y PIB, mientras que hay una negativa entre esperanza de vida y fecundidad, lo mismo que se puede ver en los gráficos, a su vez, también se puede ver una correlación negativa entre el PIB per cápita y la fecundidad.
+Tanto en los gráficos generales como en las pruebas se puede ver que hay una correlación positiva entre esperanza de vida y PIB, mientras que hay una negativa entre esperanza de vida y fecundidad, lo mismo que se puede ver en los gráficos, a su vez, también se puede ver una correlación negativa entre el PIB per cápita y la fecundidad.
 ```{r}
 
 # Visualizar matriz de Pearson
