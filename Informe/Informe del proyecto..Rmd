@@ -24,6 +24,7 @@ library(lorem)
 library(png)
 library(grid)
 library(tinytex)
+library(corrplot)
 
 ```
 **Introducción**
@@ -187,6 +188,43 @@ Si bien se observa una tendencia general decreciente entre fecundidad y esperanz
     ) +
     theme_minimal()
 ```
+Se realiza una prueba de correlación de Pearson y Spearman para identificar correlaciones positivas como negativas.
+```{r}
+
+# Filtrar datos si deseas hacerlo por año específico (opcional)
+datos_filtrados <- Datos_FEGDP %>% filter(year == 2000)
+
+# Seleccionar solo las variables numéricas de interés
+variables <- datos_filtrados %>%
+  select(esperanza_de_vida, producto_por_capita, nacimientos_por_mujer)
+# Correlación de Pearson
+cor_pearson <- cor(variables, method = "pearson", use = "complete.obs")
+
+# Correlación de Spearman
+cor_spearman <- cor(variables, method = "spearman", use = "complete.obs")
+
+# Mostrar resultados
+print("Correlación de Pearson:")
+print(round(cor_pearson, 3))
+
+print("Correlación de Spearman:")
+print(round(cor_spearman, 3))
+
+
+```
+Como se puede ver en el gráfico, hay una correlación positiva entre esperanza de vida y PIB, mientras que hay una negativa entre esperanza de vida y fecundidad, lo mismo que se puede ver en los gráficos, a su vez, también se puede ver una correlación negativa entre el PIB per cápita y la fecundidad.
+```{r}
+
+# Visualizar matriz de Pearson
+corrplot(cor_pearson, method = "circle", type = "upper", tl.cex = 0.8, title = "Pearson")
+
+# Visualizar matriz de Spearman
+corrplot(cor_spearman, method = "circle", type = "upper", tl.cex = 0.8, title = "Spearman")
+
+```
+Los resultados respaldan los patrones visuales observados anteriormente mediante gráficos.
+
+
 **Análisis Regional**
 
 Europa presenta un comportamiento particular: Se observa una caída en la cantidad de hijos por mujeres y con esto también la esperanza de vida en países con 2 hijos por mujer, aunque no se trata de una reducción sistemática. De hecho, varios países con solo 1 hijo muestran menor esperanza de vida que aquellos con 2, lo cual podría deberse a factores contextuales como el envejecimiento poblacional o las políticas de salud.
@@ -236,7 +274,6 @@ ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
        y esperanza de vida de America", x = "Hijos por mujer", y = "Esperanza de vida") +
   theme_minimal()
 ```
-
 En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años.
 
 
@@ -389,10 +426,23 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
   )
 ```
 
+Aunque la fecundidad no constituye un determinante único en la decisión de tener hijos ni en la esperanza de vida, sí representa un componente clave en el análisis con perspectiva de género. Las decisiones reproductivas están profundamente influenciadas por factores sociales, económicos y culturales, que varían según el contexto y el nivel de desarrollo.
 
-Aunque la fecundidad no es un determinante único en la decisión de tener hijos ni en la esperanza de vida, constituye un elemento relevante en el análisis con perspectiva de género, ya que las decisiones reproductivas están influenciadas por factores sociales, económicos y culturales.
+En este estudio, la regresión múltiple revela que el PIB per cápita y la fecundidad explican conjuntamente más del 84% de la variabilidad en la esperanza de vida femenina. Este resultado evidencia una correlación multivariable sólida entre desarrollo económico, salud y dinámica demográfica, y refuerza la necesidad de abordar los indicadores poblacionales desde una mirada integrada y contextualizada.
 
-En conclusión, los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. No obstante, esta investigación representa solo un punto de partida para análisis más precisos. En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres, sin considerar aún factores médicos o genéticos. Además, será necesario utilizar otros tipos de gráficos, técnicas estadísticas e indicadores adicionales para abordar nuevas preguntas y profundizar en las causas detrás de estas asociaciones.
+Además, estos hallazgos se alinean con estudios previos que sugieren un vínculo entre decisiones reproductivas y longevidad femenina. Si bien no se puede establecer una relación causal directa, los datos apuntan a que niveles moderados de fecundidad —como tener un solo hijo— podrían asociarse con una mayor esperanza de vida, especialmente en contextos con mejores condiciones socioeconómicas.
+
+
+```{r}
+
+
+# Modelo de regresión múltiple
+modelo <- lm(variables, data = Datos_FEGDP)
+
+# Resumen del modelo
+summary(modelo)
+
+```
 
 **Construcción del Dashboard**
 
@@ -412,4 +462,16 @@ En la tercera sección, correspondiente a los gráficos de interacción avanzada
 Al lado derecho de la tercera sección, por curiosidad y siguiendo el diseño del boceto original, se incluyeron dos gráficos de dispersión adicionales que permiten explorar la relación inversa entre las variables. El primero permite al usuario seleccionar una cantidad de hijos deseada y visualizar la esperanza de vida asociada a ese nivel de fecundidad. El segundo gráfico permite seleccionar una edad específica (esperanza de vida) para observar cuántos hijos, en promedio, tienen las mujeres que alcanzan esa edad. Estas visualizaciones brindan un enfoque interactivo y didáctico para comprender los patrones entre fecundidad y longevidad femenina.
 
 Para finalizar, se incluye una tabla dinámica que permite a las personas usuarias explorar libremente los datos, realizar diferentes combinaciones y responder a nuevas inquietudes o curiosidades que puedan surgir durante la interacción.
+
+**Bibliografía**
+
+1.	Bobbi S. Low, Ashley Hazel, Nicholas Parker and Kathleen B. Welch (2008) Influences on Women's Reproductive Lives : Unexpected Ecological, Cross-Cultural Research 42: 201. http://ccr.sagepub.com/content/42/3/201
+2.	Gapminder. (s.f.). Gapminder data. Gapminder Foundation. https://www.gapminder.org/data/
+3.	Hampton, J. (2021). Does very high human development lead to fertility rebound? An analysis of the Human Life Indicator. Demographic Research, 44, 121–156. https://doi.org/10.4054/DemRes.2021.44.5
+4.	OpenAI. (2025). ChatGPT (versión GPT-4o) [modelo de lenguaje]. https://chat.openai.com/
+5.	Rees, P. (2001). Children and long life: A tale of two hypotheses. People and Place, 9(2), 14–17. https://doi.org/10.3316/ielapa.200110709
+6.	Vaupel, J. W., Carey, J. R., & Christensen, K. (2001). Longevity and aging: Controversial issues in demography. International Journal of Epidemiology, 30(4), 628–631. https://doi.org/10.1093/ije/30.4.628
+7.	Zhang, C., Cao, J., Yang, Q., & Wu, Y. (2023). Association between number of children and female longevity: Evidence from the Chinese Longitudinal ealthy Longevity Survey. Authorea. https://doi.org/10.22541/au.169765027.7634832
+8.  Zipple, M. N., Reeve, H. K., & Peniston, O. J. (2024). Maternal care leads to the evolution of long, slow lives. Proceedings of the National Academy of Sciences, 121(25), e2403491121. https://doi.org/10.1073/pnas.2403491121
+
 
