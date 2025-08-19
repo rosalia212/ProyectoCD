@@ -4,9 +4,9 @@ title: Relación entre Producto Interno Bruto, Esperanza de Vida y Cantidad de H
 author: "Rosalia Carballo Chaves"
 date: "2025-08-13"
 output:
-  ioslides_presentation: default
-  slidy_presentation: default
   beamer_presentation: default
+  slidy_presentation: default
+  ioslides_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +30,7 @@ instalar_si_falta <- function(pkg) {
 
 invisible(lapply(paquetes_necesarios, instalar_si_falta))
 
-message("✅ Todos los paquetes necesarios están instalados.")
+message("Todos los paquetes necesarios están instalados.")
 
 library(tidyverse)
 library(readxl)

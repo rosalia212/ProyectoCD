@@ -29,7 +29,6 @@ library(png)
 library(grid)
 library(here)
 
-# Script de instalación de paquetes necesarios para el proyecto
 
 paquetes_necesarios <- c(
   "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
@@ -44,7 +43,7 @@ instalar_si_falta <- function(pkg) {
 
 invisible(lapply(paquetes_necesarios, instalar_si_falta))
 
-message("✅ Todos los paquetes necesarios están instalados.")
+message("Todos los paquetes necesarios están instalados.")
 
 
 # Establecer ruta solo si NO estamos en modo shiny

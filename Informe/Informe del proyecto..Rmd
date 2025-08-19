@@ -3,9 +3,9 @@ title: "Informe del Proyecto"
 author: "Rosalia"
 date: "2025-08-08"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-# Script de instalación de paquetes necesarios para el proyecto
 
 paquetes_necesarios <- c(
   "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
@@ -28,7 +27,7 @@ instalar_si_falta <- function(pkg) {
 
 invisible(lapply(paquetes_necesarios, instalar_si_falta))
 
-message("✅ Todos los paquetes necesarios están instalados.")
+message("Todos los paquetes necesarios están instalados.")
 
 library(tidyverse)
 library(readxl)
