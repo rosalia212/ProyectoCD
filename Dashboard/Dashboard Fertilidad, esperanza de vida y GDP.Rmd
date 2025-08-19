@@ -535,28 +535,168 @@ Acerca del estudio {data-icon="fa-globe"}
 Esta propuesta de diseñar una investigación en ciencias de datos me brinda la libertad de explorar con mayor profundidad temas sociales que me atraviesan personalmente. Al revisar las bases de datos disponibles en Gapminder, encontré una gran variedad de información relacionada con las mujeres, lo que despertó en mí una inquietud sobre la posible relación entre la longevidad femenina y la maternidad.
 En Costa Rica, existe una expresión popular según la cual “tener hijos te riega las bilis”, lo que en el imaginario colectivo podría asociarse con la idea de que la maternidad acorta la vida. Esta creencia me llevó a preguntarme si realmente existe una relación significativa entre la esperanza de vida de las mujeres y la cantidad promedio de hijos o hijas que tienen.
 En lo personal, mi familia ilustra esta interrogante de forma particular. Mi madre tuvo una sola hermana, quien no tuvo hijos y falleció a una edad relativamente baja para los estándares actuales. Por otro lado, espero que mi madre —quien sí tuvo hijos— viva muchos más años que el promedio nacional. Aunque anecdótica, esta observación familiar me motivó a profundizar en la investigación científica sobre el tema.
-En el proceso, encontré tres estudios que llamaron mi atención. Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. Por su parte, Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
-Me resulta interesante cómo estas investigaciones se reflejan, de alguna forma, en la experiencia de mi propia familia. A mis 35 años, nunca había considerado que la decisión de tener hijos pudiera estar vinculada con la longevidad. Aunque esta no ha sido una motivación personal, estos hallazgos abren la posibilidad de considerar la maternidad desde una perspectiva distinta.
+
+Entre los estudios que llamaron mi atención fue Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. Por su parte, Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
+Me resulta interesante cómo estas investigaciones se reflejan, de alguna forma, en la experiencia de mi propia familia. 
+
 Por otro lado, Hampton (2021) analiza la relación entre desarrollo y fecundidad, señalando que, aunque existe la idea de que a mayor desarrollo económico se podría esperar un aumento de la fecundidad, en la práctica no se observa una asociación directa. Su estudio concluye que, al menos en la última década, los niveles elevados de desarrollo humano ya no están vinculados con repuntes en la tasa de natalidad.
+
+Ahora bien, Ziepple, Reeve y Peniston (2024) realizaron un estudio sobre la relación entre maternidad y esperanza de vida, en el cual plantean que la interacción madre-cría desempeña un papel fundamental en la extensión de la vida tanto en primates humanos como no humanos. A través de la formulación de hipótesis evolutivas, concluyen que la conexión entre la supervivencia materna y la aptitud reproductiva —entendida como el éxito de la descendencia— puede favorecer vidas más largas con menor frecuencia reproductiva. Este hallazgo sugiere que, en ciertos contextos, la longevidad podría estar más vinculada al cuidado prolongado que al número de hijos, abriendo nuevas perspectivas sobre el vínculo entre maternidad y salud a largo plazo. 
+
+Este estudio se inserta en uno de los debates sobre el crecimiento poblacional, en el cual se observa que la población sigue en aumento. Sin embargo, dependiendo del continente, el debate se matiza según la cantidad de hijos por mujer.
+
+En este contexto, considero relevante abrir la discusión sobre lo que representa la decisión de tener hijos y su posible vínculo con la longevidad. Estos hallazgos no solo enriquecen el debate científico, sino que también invitan a repensar la maternidad desde una perspectiva más informada, contextualizada y consciente de sus implicaciones a largo plazo.
+
 
 **Objetivos**
 
 Ante estas inquietudes el Objetivo General es:
 
-Explorar la posible relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
+Analizar la relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, utilizando datos históricos de Gapminder entre 1950 y 2021
 
 En cuanto a los objetivos específicos son:
 
-1.	Analizar patrones y tendencias en la relación entre esperanza de vida femenina y número promedio de hijos por mujer, identificando posibles asociaciones según región geográfica y a lo largo del tiempo.
+1.	Comparar la esperanza de vida femenina, la fecundidad y el producto interno bruto per cápita entre regiones geográficas y a lo largo del tiempo, para identificar asociaciones significativas y variaciones contextuales
 
-2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
+2.	Explorar combinaciones bivariadas entre esperanza de vida femenina, fecundidad y PIB per cápita para identificar patrones y tendencias que evidencien diferencias significativas entre países con distintos niveles de desarrollo económico.
+
+3. Evaluar la relación conjunta entre PIB per cápita, fecundidad y esperanza de vida femenina, con el fin de caracterizar la correlación multivariable y su comportamiento en distintos contextos socioeconómicos.
+
+4. Diseñar y presentar un dashboard interactivo que visualice los hallazgos derivados del análisis de las tres variables, facilitando la exploración dinámica de patrones por región, año y nivel de desarrollo económico.
+
+**Metodología de investigación**
+
+Esta investigación se basa en un enfoque exploratorio utilizando información agregada a nivel país, lo que permite analizar datos históricos sobre fecundidad, esperanza de vida y producto interno bruto per cápita. Es importante aclarar que, debido a la naturaleza agregada de los datos, no es posible establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones más específicas.
 
 Como se menciona en los objetivos, he decidido trabajar con tres conjuntos de datos disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
-•	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
-•	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
-•	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
-Estos conjuntos de datos cubren periodos desde 1800 hasta 210 vbg 0, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
 
+•	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
+
+•	Children_per_women_total_fertility: número promedio de hijos por mujer a lo largo de su vida.
+
+•	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
+Estos conjuntos de datos cubren periodos desde 1800 hasta 2021, por lo que el análisis se centrará en los datos comunes disponibles a partir de 1950.
+
+Al revisar las bases de datos utilizadas, se identifican cinco variables principales: year, country, esperanza_de_vida, nacimientos_por_mujer y producto_por_capita. 
+
+Las variables principales utilizadas fueron: *year*, *country*, *esperanza_de_vida*, *nacimientos_por_mujer* y *producto_por_capita*. Aunque Gapminder actualiza sus datos periódicamente, la mayoría de las series disponibles tienen como año más reciente el 2021. Dado que se trata de indicadores globales comparables entre países, la actualización depende de fuentes oficiales como el Banco Mundial o la ONU. Por ello, se recomienda revisar las series anualmente, aunque algunas pueden actualizarse con menor frecuencia.
+
+**Preparación de los Datos**
+
+Para la preparación y análisis de los datos se utilizó el lenguaje de programación R, dada su capacidad para realizar análisis estadísticos, visualizaciones y transformaciones de datos de forma eficiente
+
+Durante la depuración de los datos se identificaron outliers al explorar la variable esperanza de vida femenina al nacer y la tasa de fecundidad (nacimientos por mujer). Utilizando técnicas estadísticas (por ejemplo, el método del rango intercuartílico), se detectaron aproximadamente:
+
+•	1175 valores atípicos en la variable de esperanza de vida.
+
+•	765 valores atípicos en la variable de fecundidad.
+
+Estos valores extremos pueden deberse a múltiples factores, como conflictos armados, crisis sanitarias, cambios abruptos en la política pública o deficiencias en el registro estadístico. Además, reflejan la alta variabilidad entre países y a lo largo del tiempo, por lo que deben ser considerados con atención en el análisis. No necesariamente deben ser eliminados, ya que pueden contener información relevante para explicar fenómenos estructurales.
+
+Se realizaron transformaciones adicionales para corregir errores en nombres de países y se generaron nuevas variables categóricas, como continente y nivel de GDP (alto/bajo)
+
+Para el análisis de los datos se empleó la estadística descriptiva e inferencial y se utilizaron las siguientes librerías de R 
+- tidyverse
+- readxl
+- readr
+- dplyr
+- ggplot2
+- ggrepel
+- countrycode
+- scales
+- maps
+- DT
+- lorem
+- png
+- grid
+- tinytex
+
+**Visualización**
+
+Se emplearon diversos tipos de gráficos para explorar las relaciones entre variables
+
+  1.	Boxplot: 
+    a.	Función: Comparar la distribución de una variable continua entre grupos categóricos.
+    b.	Aplicación: Se utilizará para mostrar diferencias en la esperanza de vida según continente, nivel de GDP (alto/bajo) o año.
+  
+2.	Gráfico de dispersión: 
+    a.	Función: Visualizar relaciones bivariadas y detectar correlaciones.
+    b.	Aplicación: Exploración de relaciones como:
+
+3.	Mapa de calor:
+    a.	Función: Visualizar patrones de densidad o intensidad en una matriz de dos variables.
+    b.	Aplicación: Relación entre país y año respecto a esperanza de vida o fecundidad.
+
+4.	Histograma:
+    a.	Función: Mostrar la distribución de una variable cuantitativa, destacando su frecuencia y variabilidad.
+    b.	Aplicación: Se utilizará para mostrar la distribución de la esperanza de vida femenina y de la fecundidad (hijos por mujer).
+
+**Reproducibilidad**
+
+Para garantizar la reproducibilidad del análisis se utilizaron herramientas como RStudio, RMarkdown y Git/GitHub, permitiendo documentar el proceso, versionar el código y compartir los resultados de forma transparente.
+
+**Resultados Generales**
+
+A partir de las investigaciones presentadas en la introducción, surge la pregunta central ¿Tener menos hijos realmente alarga la esperanza de vida femenina, o tener entre dos y cinco hijos genera un efecto similar?
+
+Este interrogante guía el análisis exploratorio presentado en el dashboard. En particular, el gráfico que relaciona fecundidad y esperanza de vida muestra una tendencia general decreciente: A mayor número de hijos por mujer, menor esperanza de vida.
+
+Este patrón sugiere que podría existir una relación inversa entre reproducción y longevidad, aunque se requiere un análisis más profundo para considerar factores contextuales y causales.
+
+Si bien se observa una tendencia general decreciente entre fecundidad y esperanza de vida —es decir, a mayor número de hijos por mujer, menor longevidad femenina— existen excepciones relevantes. Algunos países con tasas de fecundidad de 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no puede afirmarse categóricamente que tener menos hijos siempre incrementa la longevidad. Los datos sugieren que a partir de 2.5 hijos por mujer, la esperanza de vida comienza a descender de manera más marcada.
+
+Se realiza una prueba de correlación de Pearson y Spearman para identificar correlaciones positivas como negativas.
+[1] "Correlación de Pearson:"
+                      esperanza_de_vida producto_por_capita nacimientos_por_mujer
+esperanza_de_vida                 1.000                0.60                -0.856
+producto_por_capita               0.600                1.00                -0.470
+nacimientos_por_mujer            -0.856               -0.47                 1.000
+[1] "Correlación de Spearman:"
+                      esperanza_de_vida producto_por_capita nacimientos_por_mujer
+esperanza_de_vida                 1.000               0.870                -0.823
+producto_por_capita               0.870               1.000                -0.742
+nacimientos_por_mujer            -0.823              -0.742                 1.000
+
+Tanto en los gráficos generales como en las pruebas se puede ver que hay una correlación positiva entre esperanza de vida y PIB, mientras que hay una negativa entre esperanza de vida y fecundidad, lo mismo que se puede ver en los gráficos, a su vez, también se puede ver una correlación negativa entre el PIB per cápita y la fecundidad.
+
+Los resultados respaldan los patrones visuales observados anteriormente mediante gráficos.
+
+
+**Análisis Regional**
+
+Europa presenta un comportamiento particular: Se observa una caída en la cantidad de hijos por mujeres y con esto también la esperanza de vida en países con 2 hijos por mujer, aunque no se trata de una reducción sistemática. De hecho, varios países con solo 1 hijo muestran menor esperanza de vida que aquellos con 2, lo cual podría deberse a factores contextuales como el envejecimiento poblacional o las políticas de salud.
+
+En el caso de África, se registra la esperanza de vida más baja en comparación con otros continentes, manteniéndose la tendencia decreciente a pesar de una alta fecundidad.
+
+Continuando con la misma región, el bajo nivel del PIB per cápita también resalta como un elemento que podría influir en los resultados, reflejando bajos niveles de desarrollo económico.
+
+En las Américas, se conserva la tendencia general: los países con mayor fecundidad tienden a registrar niveles más bajos de esperanza de vida. Este patrón refuerza la hipótesis de una correlación negativa entre estas dos variables, aunque no necesariamente causal.
+
+En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años.
+
+Por otro lado, los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 93 y 96 años. Esto sugiere que los países con baja fecundidad tienden a presentar mayores niveles de longevidad. Sin embargo, no se observa un patrón lineal estricto: no puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
+
+Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
+
+En cuanto al PIB per cápita, el gráfico de interacción avanzada muestra cómo esta variable se asocia tanto con fecundidad como con esperanza de vida. En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta (representada en color azul). Esto evidencia que, si bien la baja fecundidad puede asociarse con mayor longevidad, el nivel de desarrollo económico es un factor modulador clave.
+
+Al comparar países según sus niveles de ingreso, se observa que en aquellos con mayor PIB per cápita, la relación entre baja fecundidad y alta esperanza de vida es más clara y estable. En contraste, los países con ingresos bajos presentan relaciones más dispersas, posiblemente influenciadas por factores externos como conflictos, pobreza estructural o debilidad institucional.
+
+**Eje Temporal**
+
+En cuanto al eje temporal, en el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se aprecia que en 1970 la esperanza de vida promedio mundial rondaba los 80 años. 
+
+Para el año 2000, esta cifra aumentó casi en una década, acercándose a los 90 años. Este incremento evidencia mejoras globales en salud, condiciones de vida y acceso a servicios básicos.
+
+Aunque la fecundidad no constituye un determinante único en la decisión de tener hijos ni en la esperanza de vida, sí representa un componente clave en el análisis con perspectiva de género. Las decisiones reproductivas están profundamente influenciadas por factores sociales, económicos y culturales, que varían según el contexto y el nivel de desarrollo.
+
+**Ideas Finales**
+
+Además, existen otras perspectivas que no pudieron abordarse en esta investigación debido a la falta de información disponible, como el rol del compañero o compañera de crianza, así como la presencia de redes de apoyo familiares, comunitarias o institucionales. Estos factores pueden influir significativamente en la experiencia reproductiva, el bienestar emocional y la salud a largo plazo de las mujeres, y podrían ser determinantes en la relación entre maternidad y longevidad. Su inclusión en futuros estudios permitiría ampliar el análisis hacia una comprensión más integral del contexto en que se toman las decisiones reproductivas y se vive la maternidad.
+
+En este estudio, la regresión múltiple revela que el PIB per cápita y la fecundidad explican conjuntamente más del 84% de la variabilidad en la esperanza de vida femenina. Este resultado evidencia una correlación multivariable sólida entre desarrollo económico, salud y dinámica demográfica, y refuerza la necesidad de abordar los indicadores poblacionales desde una mirada integrada y contextualizada.
+
+Además, estos hallazgos se alinean con estudios previos que sugieren un vínculo entre decisiones reproductivas y longevidad femenina. Si bien no se puede establecer una relación causal directa, los datos apuntan a que niveles moderados de fecundidad —como tener un solo hijo— podrían asociarse con una mayor esperanza de vida, especialmente en contextos con mejores condiciones socioeconómicas.
 
 **Construcción del Dashboard**
 
@@ -577,33 +717,13 @@ Al lado derecho de la tercera sección, por curiosidad y siguiendo el diseño de
 
 Para finalizar, se incluye una tabla dinámica que permite a las personas usuarias explorar libremente los datos, realizar diferentes combinaciones y responder a nuevas inquietudes o curiosidades que puedan surgir durante la interacción.
 
+**Bibliografía**
 
-**Resultados Generales**
-
-Ante las investigaciones presentadas en la introducción, surge la duda de si tener menos hijos realmente alarga la esperanza de vida femenina, o si, por el contrario, tener entre 2 y 5 hijos genera un efecto similar. Esta pregunta guía el análisis exploratorio presentado en este dashboard.
-
-En la sección de gráficos de combinación de variables, el gráfico que relaciona fecundidad y esperanza de vida muestra una tendencia general decreciente: a mayor número de hijos por mujer, menor esperanza de vida. Sin embargo, existen excepciones. Algunos países con 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no se puede afirmar de forma categórica que tener menos hijos siempre incrementa la longevidad. Los datos sugieren que a partir de 2.5 hijos por mujer, la esperanza de vida comienza a descender de manera más marcada.
-
-En términos regionales, Europa presenta un comportamiento particular. Se observa una caída en la esperanza de vida en países con 2 hijos por mujer, aunque no se trata de una reducción sistemática. De hecho, varios países con solo 1 hijo muestran menor esperanza de vida que aquellos con 2, lo cual podría deberse a factores contextuales como el envejecimiento poblacional o las políticas de salud.
-
-En el caso de África, se registra la esperanza de vida más baja en comparación con otros continentes, manteniéndose la tendencia decreciente a pesar de una alta fecundidad. En esta región, el bajo nivel del PIB per cápita también resalta como un elemento que podría influir en los resultados, reflejando bajos niveles de desarrollo económico.
-
-En las Américas, se conserva la tendencia general: los países con mayor fecundidad tienden a registrar niveles más bajos de esperanza de vida. Este patrón refuerza la hipótesis de una correlación negativa entre estas dos variables, aunque no necesariamente causal.
-
-En la sección de gráficos de interacción avanzada, se identifican valores altos de esperanza de vida asociados a tasas de fecundidad cercanas a 0.7 hijos por mujer, con una esperanza de vida promedio entre 86 y 89 años. Por otro lado, los países con una fecundidad de 1 hijo muestran una esperanza de vida aún mayor, entre 87 y 96 años. Esto sugiere que los países con baja fecundidad tienden a presentar mayores niveles de longevidad. Sin embargo, no se observa un patrón lineal estricto: no puede afirmarse que a menor número de hijos por mujer siempre corresponda una mayor esperanza de vida.
-
-Es importante aclarar que los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones.
-
-Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
-
-En cuanto al PIB per cápita, el gráfico de interacción avanzada muestra cómo esta variable se asocia tanto con fecundidad como con esperanza de vida. En el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta (representada en color azul). Esto evidencia que, si bien la baja fecundidad puede asociarse con mayor longevidad, el nivel de desarrollo económico es un factor modulador clave.
-
-Al comparar países según sus niveles de ingreso, se observa que en aquellos con mayor PIB per cápita, la relación entre baja fecundidad y alta esperanza de vida es más clara y estable. En contraste, los países con ingresos bajos presentan relaciones más dispersas, posiblemente influenciadas por factores externos como conflictos, pobreza estructural o debilidad institucional.
-
-En cuanto al eje temporal, en el gráfico "Relación entre GDP, fecundidad y esperanza de vida", se aprecia que en 1970 la esperanza de vida promedio mundial rondaba los 80 años. Para el año 2000, esta cifra aumentó casi en una década, acercándose a los 90 años. Este incremento evidencia mejoras globales en salud, condiciones de vida y acceso a servicios básicos.
-
-Aunque la fecundidad no es un determinante único en la decisión de tener hijos ni en la esperanza de vida, constituye un elemento relevante en el análisis con perspectiva de género, ya que las decisiones reproductivas están influenciadas por factores sociales, económicos y culturales.
-
-En conclusión, los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. No obstante, esta investigación representa solo un punto de partida para análisis más precisos. En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres, sin considerar aún factores médicos o genéticos. Además, será necesario utilizar otros tipos de gráficos, técnicas estadísticas e indicadores adicionales para abordar nuevas preguntas y profundizar en las causas detrás de estas asociaciones.
-
-
+1.	Bobbi S. Low, Ashley Hazel, Nicholas Parker and Kathleen B. Welch (2008) Influences on Women's Reproductive Lives : Unexpected Ecological, Cross-Cultural Research 42: 201. http://ccr.sagepub.com/content/42/3/201
+2.	Gapminder. (s.f.). Gapminder data. Gapminder Foundation. https://www.gapminder.org/data/
+3.	Hampton, J. (2021). Does very high human development lead to fertility rebound? An analysis of the Human Life Indicator. Demographic Research, 44, 121–156. https://doi.org/10.4054/DemRes.2021.44.5
+4.	OpenAI. (2025). ChatGPT (versión GPT-4o) [modelo de lenguaje]. https://chat.openai.com/
+5.	Rees, P. (2001). Children and long life: A tale of two hypotheses. People and Place, 9(2), 14–17. https://doi.org/10.3316/ielapa.200110709
+6.	Vaupel, J. W., Carey, J. R., & Christensen, K. (2001). Longevity and aging: Controversial issues in demography. International Journal of Epidemiology, 30(4), 628–631. https://doi.org/10.1093/ije/30.4.628
+7.	Zhang, C., Cao, J., Yang, Q., & Wu, Y. (2023). Association between number of children and female longevity: Evidence from the Chinese Longitudinal ealthy Longevity Survey. Authorea. https://doi.org/10.22541/au.169765027.7634832
+8.  Zipple, M. N., Reeve, H. K., & Peniston, O. J. (2024). Maternal care leads to the evolution of long, slow lives. Proceedings of the National Academy of Sciences, 121(25), e2403491121. https://doi.org/10.1073/pnas.2403491121
