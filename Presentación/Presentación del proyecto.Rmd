@@ -53,9 +53,9 @@ Analizar la relación entre la esperanza de vida femenina, la fecundidad y el ni
 
 2.	Explorar combinaciones bivariadas entre esperanza de vida femenina, fecundidad y PIB per cápita 
 
-3. Evaluar la relación conjunta entre PIB per cápita, fecundidad y esperanza de vida femenina
+3.  Evaluar la relación conjunta entre PIB per cápita, fecundidad y esperanza de vida femenina
 
-4. Diseñar y presentar un dashboard interactivo que visualice los hallazgos derivados del análisis de las tres variables
+4.  Diseñar y presentar un dashboard interactivo que visualice los hallazgos derivados del análisis de las tres variables
 
 ## Metodología de investigación
 
@@ -318,15 +318,12 @@ vida_max2 <- 96
     theme_minimal()
 ```
 
-## Características de la investigación
-Los datos analizados provienen de una investigación exploratoria con información agregada a nivel país, por lo que no permiten establecer relaciones causales individuales.
-
-Aunque no se puede concluir que tener hijos necesariamente alarga o acorta la vida, los gráficos permiten identificar tendencias consistentes, especialmente al analizar los datos por regiones o niveles de desarrollo económico.
 
 ## Producto Interno Bruto
-Se observa que los países con PIB superiores a 100,000 dólares se ubican principalmente en la franja de 2 a 2.5 hijos por mujer, y presentan una esperanza de vida alta.
+Al comparar países según sus niveles de ingreso, se observa que en aquellos con mayor PIB per cápita, la relación entre baja fecundidad y alta esperanza de vida es más clara y estable. En contraste, los países con ingresos bajos presentan relaciones más dispersas, posiblemente influenciadas por factores externos como conflictos, pobreza estructural o debilidad institucional.
 
-```{r fig.width=8, fig.height=4}
+
+```{r fig.width=6, fig.height=4}
   datos_filtrados <- Datos_FEGDP %>%
     filter(
       !is.na(producto_por_capita), 
@@ -420,10 +417,10 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
 
 ## Ideas Finales
 
-Aunque la fecundidad no es un determinante único en la decisión de tener hijos ni en la esperanza de vida, constituye un elemento relevante en el análisis con perspectiva de género, ya que las decisiones reproductivas están influenciadas por factores sociales, económicos y culturales.
+Aunque la fecundidad no constituye un determinante único en la decisión de tener hijos ni en la esperanza de vida, sí representa un componente clave en el análisis con perspectiva de género. Las decisiones reproductivas están profundamente influenciadas por factores sociales, económicos y culturales, que varían según el contexto y el nivel de desarrollo.
 
-Los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. 
-En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres.
+
+
 
 
 ## Construcción del Dashboard
