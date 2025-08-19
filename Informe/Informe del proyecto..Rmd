@@ -51,7 +51,7 @@ En este contexto, considero relevante abrir la discusión sobre lo que represent
 
 Ante estas inquietudes el Objetivo General es:
 
-Analizar la relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, utilizando datos históricos de Gapminder entre 1950 y 2021,
+Analizar la relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, utilizando datos históricos de Gapminder entre 1950 y 2021
 
 En cuanto a los objetivos específicos son:
 
@@ -429,6 +429,8 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
 ```
 
 Aunque la fecundidad no constituye un determinante único en la decisión de tener hijos ni en la esperanza de vida, sí representa un componente clave en el análisis con perspectiva de género. Las decisiones reproductivas están profundamente influenciadas por factores sociales, económicos y culturales, que varían según el contexto y el nivel de desarrollo.
+
+Además otras perspectivas que no se abordaron ya que no se tenía esa información, era respecto a el o la compañera de crianza con el bebé.
 
 En este estudio, la regresión múltiple revela que el PIB per cápita y la fecundidad explican conjuntamente más del 84% de la variabilidad en la esperanza de vida femenina. Este resultado evidencia una correlación multivariable sólida entre desarrollo económico, salud y dinámica demográfica, y refuerza la necesidad de abordar los indicadores poblacionales desde una mirada integrada y contextualizada.
 
