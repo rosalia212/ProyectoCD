@@ -28,6 +28,7 @@ library(lorem)
 library(png)
 library(grid)
 library(tinytex)
+library(corrplot)
 
 ```
 
@@ -39,24 +40,28 @@ Al revisar las bases de datos disponibles en Gapminder, encontré una gran varie
 Estudios que llamaron mi atención: 
 - Vaupel (2001) plantea que podría existir una relación positiva entre el número de hijos y la longevidad en las mujeres, especialmente cuando el último parto ocurre a una edad avanzada. 
 - Zhang et al. (2023) afirman que las mujeres que tienen entre tres y cinco hijos tienden a vivir más tiempo, mientras que aquellas con uno o ningún hijo presentan una esperanza de vida más corta.
+ Ziepple, Reeve y Peniston (2024) concluyen que la conexión entre la supervivencia materna y la aptitud reproductiva —entendida como el éxito de la descendencia— puede favorecer vidas más largas con menor frecuencia reproductiva.
 
-A mis 35 años, nunca había considerado que la decisión de tener hijos pudiera estar vinculada con la longevidad.
 
 ## Objetivo General
 
-1. Explorar la relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, a partir de datos históricos entre 1950 y 2021 disponibles en Gapminder.
+Analizar la relación entre la esperanza de vida femenina, la fecundidad y el nivel de desarrollo económico en países del mundo, utilizando datos históricos de Gapminder entre 1950 y 2021
 
 **Objetivos específicos son**
 
-1.	Analizar patrones y tendencias en la relación entre esperanza de vida femenina y número promedio de hijos por mujer, identificando posibles asociaciones según región geográfica y a lo largo del tiempo.
+1.	Comparar la esperanza de vida femenina, la fecundidad y el producto interno bruto per cápita entre regiones geográficas y a lo largo del tiempo, 
 
-2.	Explorar la relación entre el producto interno bruto per cápita (ajustado por poder adquisitivo) y los niveles de fecundidad y longevidad femenina, para determinar si existen diferencias significativas entre países con distinto nivel de desarrollo económico.
+2.	Explorar combinaciones bivariadas entre esperanza de vida femenina, fecundidad y PIB per cápita 
 
-3. Representar mediante un Dashboard la correlación entre el producto interno bruto per cápita y los niveles de fecundidad y longevidad femenina.
+3. Evaluar la relación conjunta entre PIB per cápita, fecundidad y esperanza de vida femenina
 
-## Extracción de Datos
+4. Diseñar y presentar un dashboard interactivo que visualice los hallazgos derivados del análisis de las tres variables
 
-Disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
+## Metodología de investigación
+
+Esta investigación se basa en un enfoque exploratorio utilizando información agregada a nivel país, lo que permite analizar datos históricos sobre fecundidad, esperanza de vida y producto interno bruto per cápita. Es importante aclarar que, debido a la naturaleza agregada de los datos, no es posible establecer relaciones causales individuales. Lo que se observa son asociaciones a nivel macro, que pueden orientar futuras investigaciones más específicas.
+
+**Datos**
 
 •	Life_expectancy_female: esperanza de vida al nacer de mujeres (en años).
 
@@ -64,7 +69,7 @@ Disponibles en Gapminder para desarrollar un análisis exploratorio de datos:
 
 •	Gross domestic product per person: producto interno bruto per cápita ajustado por paridad de poder adquisitivo al año 2021.
 
-
+Gapminder
 
 ```{r}
 Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
@@ -72,17 +77,54 @@ Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mu
 
 ```
 
-## Construcción del Dashboard
+## Preparación de los Datos
 
-En la primera sección del dashboard, el objetivo era ofrecer una visión general de las tres variables principales. 
+Se utilizó el lenguaje de programación R, dada su capacidad para realizar análisis estadísticos, visualizaciones y transformaciones de datos de forma eficiente
 
-La segunda sección, dedicada a los gráficos comparativos de variables, presenta tres gráficos de dispersión con distintos colores, lo que facilita su diferenciación. 
+Durante la depuración de los datos se identificaron outliers 
 
-En la tercera sección, correspondiente a los gráficos de interacción avanzada, se representa la relación entre las tres variables mediante un gráfico de dispersión.
+•	1175 valores atípicos en la variable de esperanza de vida.
+
+•	765 valores atípicos en la variable de fecundidad.
+
+Se realizaron transformaciones adicionales para corregir errores en nombres de países y se generaron nuevas variables categóricas, como continente y nivel de GDP (alto/bajo)
+
+## Librerías de R
+
+- tidyverse   
+- readxl
+- readr       
+- dplyr
+- ggplot2     
+- ggrepel
+- countrycode 
+- scales
+- maps        
+- DT
+- lorem       
+- png
+- grid        
+- tinytex
+
+## Visualización
+
+Se emplearon diversos tipos de gráficos para explorar las relaciones entre variables
+
+  1.	Boxplot 
+  
+  2.	Gráfico de dispersión
+  
+  3.	Mapa de calor
+  
+  4.	Histograma
+
 
 ## Resultados Generales
-Ante las investigaciones presentadas en la introducción, surge la duda de si tener menos hijos realmente alarga la esperanza de vida femenina, o si, por el contrario, tener entre 2 y 5 hijos genera un efecto similar. 
+
+A partir de las investigaciones presentadas en la introducción, surge la pregunta central ¿Tener menos hijos realmente alarga la esperanza de vida femenina, o tener entre dos y cinco hijos genera un efecto similar?
+
 El gráfico que relaciona fecundidad y esperanza de vida muestra una tendencia general decreciente: a mayor número de hijos por mujer, menor esperanza de vida. 
+
 ```{r grafico_vida_fecundidad, echo=FALSE, fig.width=6, fig.height=3}
 
 datos_filtrados <- Datos_FEGDP
@@ -96,7 +138,8 @@ ggplot(datos_filtrados, aes(x = nacimientos_por_mujer, y = esperanza_de_vida)) +
 ```
 
 ## Algunas excepciones 
-Algunos países con 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no se puede afirmar de forma categórica que tener menos hijos siempre incrementa la longevidad. 
+
+Algunos países con tasas de fecundidad de 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo que indica que no puede afirmarse categóricamente que tener menos hijos siempre incrementa la longevidad.
 
 ```{r fig.width=6, fig.height=3}
  hijos <- 1.5
@@ -121,6 +164,48 @@ Algunos países con 1 o 2 hijos mantienen niveles altos de esperanza de vida, lo
       y = "Esperanza de vida (años)"
     ) +
     theme_minimal()
+```
+
+
+
+
+
+```{r}
+
+# Filtrar datos si deseas hacerlo por año específico (opcional)
+datos_filtrados <- Datos_FEGDP %>% filter(year == 2000)
+
+# Seleccionar solo las variables numéricas de interés
+variables <- datos_filtrados %>%
+  select(esperanza_de_vida, producto_por_capita, nacimientos_por_mujer)
+# Correlación de Pearson
+cor_pearson <- cor(variables, method = "pearson", use = "complete.obs")
+
+# Correlación de Spearman
+cor_spearman <- cor(variables, method = "spearman", use = "complete.obs")
+
+# Mostrar resultados
+print("Correlación de Pearson:")
+print(round(cor_pearson, 3))
+
+print("Correlación de Spearman:")
+print(round(cor_spearman, 3))
+
+```
+
+
+
+## Pruebas Pearson y Spearman 
+
+Se realiza una prueba de correlación de Pearson y Spearman para identificar correlaciones positivas como negativas.
+```{r fig.width=6, fig.height=3}
+
+# Visualizar matriz de Pearson
+corrplot(cor_pearson, method = "circle", type = "upper", tl.cex = 0.8, title = "Pearson")
+
+# Visualizar matriz de Spearman
+corrplot(cor_spearman, method = "circle", type = "upper", tl.cex = 0.8, title = "Spearman")
+
 ```
 
 ## A nivel Regional: Europa
@@ -340,3 +425,11 @@ Aunque la fecundidad no es un determinante único en la decisión de tener hijos
 Los datos permiten identificar patrones generales entre esperanza de vida, fecundidad y nivel de desarrollo económico. 
 En el futuro, podrían desarrollarse modelos predictivos que, tomando en cuenta el número de hijos y el nivel económico, estimen la esperanza de vida de las mujeres.
 
+
+## Construcción del Dashboard
+
+En la primera sección del dashboard, el objetivo era ofrecer una visión general de las tres variables principales. 
+
+La segunda sección, dedicada a los gráficos comparativos de variables, presenta tres gráficos de dispersión con distintos colores, lo que facilita su diferenciación. 
+
+En la tercera sección, correspondiente a los gráficos de interacción avanzada, se representa la relación entre las tres variables mediante un gráfico de dispersión.
