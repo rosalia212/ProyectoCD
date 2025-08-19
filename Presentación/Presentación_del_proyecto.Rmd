@@ -5,8 +5,8 @@ author: "Rosalia Carballo Chaves"
 date: "2025-08-13"
 output:
   beamer_presentation: default
-  slidy_presentation: default
   ioslides_presentation: default
+  slidy_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,6 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 
 ```{r}
-# Script de instalación de paquetes necesarios para el proyecto
 
 paquetes_necesarios <- c(
   "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
