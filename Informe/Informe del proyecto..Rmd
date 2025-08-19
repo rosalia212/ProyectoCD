@@ -3,6 +3,7 @@ title: "Informe del Proyecto"
 author: "Rosalia"
 date: "2025-08-08"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -12,6 +13,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+# Script de instalación de paquetes necesarios para el proyecto
+
+paquetes_necesarios <- c(
+  "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
+  "ggrepel", "countrycode", "scales", "maps", "DT", "lorem", "png", "grid"
+)
+
+instalar_si_falta <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(paquetes_necesarios, instalar_si_falta))
+
+message("✅ Todos los paquetes necesarios están instalados.")
+
 library(tidyverse)
 library(readxl)
 library(readr)
@@ -27,6 +45,7 @@ library(png)
 library(grid)
 library(tinytex)
 library(corrplot)
+library(here)
 
 ```
 **Introducción**
@@ -82,7 +101,10 @@ Las variables principales utilizadas fueron: *year*, *country*, *esperanza_de_vi
 **Datos Utilizados**
 
 ```{r}
-Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
+Datos_FEGDP <- readr::read_csv(
+  here("Datos", "Base_Datos_depurada", "base_completa.csv"),
+  locale = locale(encoding = "UTF-8")
+)
 Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mujer", "continente", "gdp_grupo")) 
 
 
@@ -430,7 +452,7 @@ ggplot(datos_filtrados, aes(x = producto_por_capita,
 
 Aunque la fecundidad no constituye un determinante único en la decisión de tener hijos ni en la esperanza de vida, sí representa un componente clave en el análisis con perspectiva de género. Las decisiones reproductivas están profundamente influenciadas por factores sociales, económicos y culturales, que varían según el contexto y el nivel de desarrollo.
 
-Además otras perspectivas que no se abordaron ya que no se tenía esa información, era respecto a el o la compañera de crianza con el bebé.
+Además, existen otras perspectivas que no pudieron abordarse en esta investigación debido a la falta de información disponible, como el rol del compañero o compañera de crianza, así como la presencia de redes de apoyo familiares, comunitarias o institucionales. Estos factores pueden influir significativamente en la experiencia reproductiva, el bienestar emocional y la salud a largo plazo de las mujeres, y podrían ser determinantes en la relación entre maternidad y longevidad. Su inclusión en futuros estudios permitiría ampliar el análisis hacia una comprensión más integral del contexto en que se toman las decisiones reproductivas y se vive la maternidad.
 
 En este estudio, la regresión múltiple revela que el PIB per cápita y la fecundidad explican conjuntamente más del 84% de la variabilidad en la esperanza de vida femenina. Este resultado evidencia una correlación multivariable sólida entre desarrollo económico, salud y dinámica demográfica, y refuerza la necesidad de abordar los indicadores poblacionales desde una mirada integrada y contextualizada.
 

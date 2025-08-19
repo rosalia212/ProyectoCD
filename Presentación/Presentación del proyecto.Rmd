@@ -14,6 +14,23 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 
 ```{r}
+# Script de instalación de paquetes necesarios para el proyecto
+
+paquetes_necesarios <- c(
+  "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
+  "ggrepel", "countrycode", "scales", "maps", "DT", "lorem", "png", "grid"
+)
+
+instalar_si_falta <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(paquetes_necesarios, instalar_si_falta))
+
+message("✅ Todos los paquetes necesarios están instalados.")
+
 library(tidyverse)
 library(readxl)
 library(readr)
@@ -29,6 +46,8 @@ library(png)
 library(grid)
 library(tinytex)
 library(corrplot)
+library(here)
+
 
 ```
 
@@ -76,8 +95,10 @@ Esta investigación se basa en un enfoque exploratorio utilizando información a
 Gapminder
 
 ```{r}
-Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
-Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mujer", "continente", "gdp_grupo")) 
+Datos_FEGDP <- readr::read_csv(
+  here("Datos", "Base_Datos_depurada", "base_completa.csv"),
+  locale = locale(encoding = "UTF-8")
+)
 
 ```
 

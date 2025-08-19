@@ -1628,6 +1628,23 @@ display: none;
 </div>
 
 
+<pre class="r"><code># Script de instalación de paquetes necesarios para el proyecto
+
+paquetes_necesarios &lt;- c(
+  &quot;flexdashboard&quot;, &quot;tidyverse&quot;, &quot;readxl&quot;, &quot;readr&quot;, &quot;dplyr&quot;, &quot;ggplot2&quot;,
+  &quot;ggrepel&quot;, &quot;countrycode&quot;, &quot;scales&quot;, &quot;maps&quot;, &quot;DT&quot;, &quot;lorem&quot;, &quot;png&quot;, &quot;grid&quot;
+)
+
+instalar_si_falta &lt;- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(paquetes_necesarios, instalar_si_falta))
+
+message(&quot;✅ Todos los paquetes necesarios están instalados.&quot;)</code></pre>
+<pre><code>## ✅ Todos los paquetes necesarios están instalados.</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.4.3</code></pre>
 <pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.4.3</code></pre>
@@ -1644,8 +1661,8 @@ display: none;
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ## ✔ ggplot2   3.5.2     ✔ tibble    3.3.0
 ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.0.4     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✔ purrr     1.0.4</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
@@ -1688,6 +1705,9 @@ library(tinytex)</code></pre>
 <pre class="r"><code>library(corrplot)</code></pre>
 <pre><code>## Warning: package &#39;corrplot&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## corrplot 0.95 loaded</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>## Warning: package &#39;here&#39; was built under R version 4.4.3</code></pre>
+<pre><code>## here() starts at C:/Users/Rosalía Carballo/OneDrive/Documentos/ProyectoCD</code></pre>
 <p><strong>Introducción</strong></p>
 <p>Esta propuesta de diseñar una investigación en ciencias de datos me
 brinda la libertad de explorar con mayor profundidad temas sociales que
@@ -1746,7 +1766,7 @@ plazo.</p>
 <p>Ante estas inquietudes el Objetivo General es:</p>
 <p>Analizar la relación entre la esperanza de vida femenina, la
 fecundidad y el nivel de desarrollo económico en países del mundo,
-utilizando datos históricos de Gapminder entre 1950 y 2021,</p>
+utilizando datos históricos de Gapminder entre 1950 y 2021</p>
 <p>En cuanto a los objetivos específicos son:</p>
 <ol style="list-style-type: decimal">
 <li><p>Comparar la esperanza de vida femenina, la fecundidad y el
@@ -1796,7 +1816,10 @@ de fuentes oficiales como el Banco Mundial o la ONU. Por ello, se
 recomienda revisar las series anualmente, aunque algunas pueden
 actualizarse con menor frecuencia.</p>
 <p><strong>Datos Utilizados</strong></p>
-<pre class="r"><code>Datos_FEGDP &lt;- readr::read_csv(&quot;../Datos/Base_Datos_depurada/base_completa.csv&quot;, locale = locale(encoding = &quot;UTF-8&quot;))</code></pre>
+<pre class="r"><code>Datos_FEGDP &lt;- readr::read_csv(
+  here(&quot;Datos&quot;, &quot;Base_Datos_depurada&quot;, &quot;base_completa.csv&quot;),
+  locale = locale(encoding = &quot;UTF-8&quot;)
+)</code></pre>
 <pre><code>## Rows: 35636 Columns: 7
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -2334,6 +2357,16 @@ componente clave en el análisis con perspectiva de género. Las
 decisiones reproductivas están profundamente influenciadas por factores
 sociales, económicos y culturales, que varían según el contexto y el
 nivel de desarrollo.</p>
+<p>Además, existen otras perspectivas que no pudieron abordarse en esta
+investigación debido a la falta de información disponible, como el rol
+del compañero o compañera de crianza, así como la presencia de redes de
+apoyo familiares, comunitarias o institucionales. Estos factores pueden
+influir significativamente en la experiencia reproductiva, el bienestar
+emocional y la salud a largo plazo de las mujeres, y podrían ser
+determinantes en la relación entre maternidad y longevidad. Su inclusión
+en futuros estudios permitiría ampliar el análisis hacia una comprensión
+más integral del contexto en que se toman las decisiones reproductivas y
+se vive la maternidad.</p>
 <p>En este estudio, la regresión múltiple revela que el PIB per cápita y
 la fecundidad explican conjuntamente más del 84% de la variabilidad en
 la esperanza de vida femenina. Este resultado evidencia una correlación

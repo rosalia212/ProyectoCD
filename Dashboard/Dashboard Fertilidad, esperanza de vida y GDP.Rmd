@@ -27,6 +27,25 @@ library(DT)
 library(lorem)
 library(png)
 library(grid)
+library(here)
+
+# Script de instalación de paquetes necesarios para el proyecto
+
+paquetes_necesarios <- c(
+  "flexdashboard", "tidyverse", "readxl", "readr", "dplyr", "ggplot2",
+  "ggrepel", "countrycode", "scales", "maps", "DT", "lorem", "png", "grid"
+)
+
+instalar_si_falta <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+invisible(lapply(paquetes_necesarios, instalar_si_falta))
+
+message("✅ Todos los paquetes necesarios están instalados.")
+
 
 # Establecer ruta solo si NO estamos en modo shiny
 if (is.null(shiny::getDefaultReactiveDomain())) {
@@ -37,8 +56,18 @@ if (is.null(shiny::getDefaultReactiveDomain())) {
 
 
 ```{r}
-Datos_FEGDP <- readr::read_csv("../Datos/Base_Datos_depurada/base_completa.csv", locale = locale(encoding = "UTF-8"))
 
+cargar_datos <- function(ruta_relativa) {
+  ruta <- tryCatch(
+    normalizePath(ruta_relativa, mustWork = TRUE),
+    error = function(e) {
+      stop("No se pudo encontrar el archivo: ", ruta_relativa)
+    }
+  )
+  read_csv(ruta, locale = locale(encoding = "UTF-8"))
+}
+
+Datos_FEGDP <- cargar_datos("../Datos/Base_Datos_depurada/base_completa.csv")
 
 Vars <- paste0(c("esperanza_de_vida", "producto_por_capita", "nacimientos_por_mujer", "continente", "gdp_grupo")) 
 
